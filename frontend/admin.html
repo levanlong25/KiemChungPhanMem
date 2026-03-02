@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - EV Trade</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      html {
+        overflow-y: scroll;  
+      }
+      .dashboard-section {
+        display: none;
+      }
+      .dashboard-section.active {
+        display: block;
+        animation: fadeIn 0.5s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Login Page for Admin -->
+    <div
+      id="admin-login-page"
+      class="flex items-center justify-center h-screen"
+    >
+      <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
+        <h2 class="text-2xl font-bold text-center mb-6">Admin Login</h2>
+        <form id="admin-login-form">
+          <div class="mb-4">
+            <label
+              for="admin-email"
+              class="block text-sm font-medium text-gray-700"
+              >Email hoặc Username</label
+            >
+            <input
+              type="text"
+              id="admin-email"
+              autocomplete="username"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label
+              for="admin-password"
+              class="block text-sm font-medium text-gray-700"
+              >Mật khẩu</label
+            >
+            <input
+              type="password"
+              id="admin-password"
+              autocomplete="current-password"
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700"
+          >
+            Đăng Nhập
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Main Dashboard (Hidden by default) -->
+    <div id="dashboard" class="hidden">
+      <header class="bg-white shadow">
+        <div
+          class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center"
+        >
+          <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+          <button
+            onclick="adminLogout()"
+            class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600"
+          >
+            Đăng Xuất
+          </button>
+        </div>
+      </header>
+
+      <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <!-- Navigation Tabs -->
+        <div class="mb-6 border-b border-gray-200">
+          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <a
+              href="#"
+              onclick="showSection('users-section')"
+              class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-indigo-500 text-indigo-600"
+              >Quản lý Người Dùng</a>
+            <a
+              href="#"
+              onclick="showSection('listings-section')"
+              class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              >Quản lý Tin Đăng</a>
+            <a
+              href="#"
+              onclick="showSection('auctions-section')"
+              class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              >Quản lý Đấu Giá</a>
+            <a
+              href="#"
+              onclick="showSection('transactions-section')"
+              class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              >Quản lý Giao dịch</a>
+            <a
+                href="#"
+                onclick="showSection('reports-section')"
+                class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              >Quản lý Báo cáo
+            </a>
+            <!-- thêm -->
+            <a
+                href="#"
+                onclick="showSection('fees-section')"
+                class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                >Cấu hình Phí</a
+            > 
+            <a
+                href="#"
+                onclick="showSection('stats-section')"
+                class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            >
+                Thống Kê & Báo Cáo
+            </a>
+            <a
+                href="#"
+                onclick="showSection('pricing-data-section')"
+                class="tab-link whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+            >
+                Dữ liệu Giá (AI)
+            </a> 
+          </nav>
+        </div>
+
+        <div id="user-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-75 items-center justify-center p-4 z-50 hidden">
+          <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg">
+              <h3 id="user-modal-title" class="text-xl font-bold mb-6">Thêm Người Dùng Mới</h3>
+              <form id="user-form">
+                  <input type="hidden" id="user-id">
+
+                  <div class="space-y-4">
+                      <div>
+                          <label for="user-username" class="block text-sm font-medium text-gray-700">Username</label>
+                          <input type="text" id="user-username" autocomplete="username" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                      </div>
+                      <div>
+                          <label for="user-email" class="block text-sm font-medium text-gray-700">Email</label>
+                          <input type="email" id="user-email" autocomplete="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                      </div>
+                      <div>
+                          <label for="user-password" class="block text-sm font-medium text-gray-700">Mật khẩu</label>
+                          <input type="password" id="user-password" autocomplete="new-password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required placeholder="Ít nhất 6 ký tự">
+                          <p class="text-xs text-gray-500 mt-1">Để trống nếu không muốn đặt/thay đổi mật khẩu khi cập nhật.</p>
+                      </div>
+                      <div>
+                          <label for="user-role" class="block text-sm font-medium text-gray-700">Vai trò</label>
+                          <select id="user-role" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                              <option value="member">Member</option>
+                              <option value="admin">Admin</option>
+                          </select>
+                      </div>
+                      <div>
+                          <label for="user-status" class="block text-sm font-medium text-gray-700">Trạng thái</label>
+                          <select id="user-status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                              <option value="active">Active</option>
+                              <option value="locked">Locked</option>
+                          </select>
+                      </div>
+                  </div>
+
+                  <div class="flex justify-end space-x-3 mt-8">
+                      <button type="button" onclick="closeModal('user-modal')" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400">Hủy</button>
+                      <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">Lưu</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+        <!-- User Management Section -->
+        <div id="users-section" class="dashboard-section">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold">Danh sách người dùng</h2>
+            <button onclick="openUserModal()" class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 text-sm">
+              + Thêm Người Dùng Mới
+            </button>
+          </div>
+          <div
+            class="my-4 p-4 bg-white rounded-lg shadow flex items-center space-x-4"
+          >
+            <label for="user-status-filter" class="text-sm font-medium text-gray-700"
+              >Lọc theo Trạng thái:</label
+            >
+            <select
+              id="user-status-filter"
+              class="block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="">Tất cả Trạng thái</option>
+              <option value="active">Active</option>
+              <option value="locked">Locked</option>
+            </select>
+            <button
+              onclick="loadAllUsers()"
+              class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm"
+            >
+              Lọc
+            </button>
+          </div>
+
+          <div class="bg-white shadow rounded-lg overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    ID
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Username
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Email
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Role
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Status
+                  </th>
+                  <th
+                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="text-align: center;"
+                  >
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody
+                id="users-table-body"
+                class="bg-white divide-y divide-gray-200"
+              >
+                <!-- User rows will be injected here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Listing Management Section -->
+        <div id="listings-section" class="dashboard-section">
+          <h2 class="text-xl font-semibold mb-4">Tin đăng chờ duyệt</h2>
+          <div id="pending-listings-container" class="space-y-4 mb-8">
+            <!-- Pending listings will be injected here -->
+          </div>
+
+          <h2 class="text-xl font-semibold mb-4 border-t pt-4">
+            Tất cả tin đăng
+          </h2>
+
+            <div
+              class="my-4 p-4 bg-white rounded-lg shadow flex items-center space-x-4"
+            >
+              <label for="listing-type-filter" class="text-sm font-medium text-gray-700"
+                >Lọc theo Loại:</label
+              >
+              <select
+                id="listing-type-filter"
+                class="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Tất cả Loại</option>
+                <option value="vehicle">Vehicle</option>
+                <option value="battery">Battery</option>
+              </select>
+
+              <label
+                for="listing-status-filter"
+                class="text-sm font-medium text-gray-700 ml-4"
+                >Trạng thái:</label
+              >
+              <select
+                id="listing-status-filter"
+                class="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Tất cả</option>
+                <option value="available">Available</option>
+                <option value="sold">Sold</option>
+              </select>
+              <button
+                onclick="loadAllListings()"
+                class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm ml-auto"
+              >
+                Lọc
+              </button>
+            </div>
+
+          <div id="all-listings-container" class="space-y-4">
+            <!-- All listings will be injected here -->
+          </div>
+        </div>
+
+
+        <div id="auctions-section" class="dashboard-section">
+          <h2 class="text-xl font-semibold mb-4">Đấu giá chờ duyệt</h2>
+          <div id="pending-auctions-container" class="space-y-4 mb-8">
+            <!-- Pending auctions will be injected here -->
+          </div>
+
+          <h2 class="text-xl font-semibold mb-4 border-t pt-4">
+            Tất cả đấu giá
+          </h2>
+          
+          <div
+              class="my-4 p-4 bg-white rounded-lg shadow flex items-center space-x-4"
+            >
+              <label for="auction-type-filter" class="text-sm font-medium text-gray-700"
+                >Lọc theo Loại:</label
+              >
+              <select
+                id="auction-type-filter"
+                class="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Tất cả Loại</option>
+                <option value="vehicle">Vehicle</option>
+                <option value="battery">Battery</option>
+              </select>
+
+              <label
+                for="auction-status-filter"
+                class="text-sm font-medium text-gray-700 ml-4"
+                >Trạng thái:</label
+              >
+              <select
+                id="auction-status-filter"
+                class="block w-40 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Tất cả</option>
+                <option value="prepare">Prepare</option>
+                <option value="started">Started</option>
+                <option value="ended">Ended</option>
+              </select>
+              <button
+                onclick="loadAllAuctions()"
+                class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm ml-auto"
+              >
+                Lọc
+              </button>
+            </div>
+
+          <div id="all-auctions-container" class="space-y-4">
+            <!-- All auctions will be injected here -->
+          </div>
+        </div>
+        <div id="transactions-section" class="dashboard-section">
+            <h2 class="text-xl font-semibold mb-4">Danh sách giao dịch</h2>
+            <p class="text-sm text-gray-600 mb-4">Xem và duyệt các giao dịch đã được người dùng thanh toán.</p>
+            <div
+              class="my-4 p-4 bg-white rounded-lg shadow flex items-center space-x-4"
+            >
+              <label
+                for="transaction-status-filter"
+                class="text-sm font-medium text-gray-700"
+                >Lọc theo Trạng thái Thanh toán:</label
+              >
+              <select
+                id="transaction-status-filter"
+                class="block w-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+              >
+                <option value="">Tất cả</option>
+                <option value="initiated">Chờ thanh toán</option>
+                <option value="pending">Chờ duyệt</option>
+                <option value="completed">Hoàn thành</option>
+                <option value="failed">Thất bại</option>
+              </select>
+              <button
+                onclick="loadAllTransactions()"
+                class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 text-sm"
+              >
+                Lọc
+              </button>
+            </div>
+            <div class="bg-white shadow rounded-lg overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trans ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Seller</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Buyer</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bank Seller</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactions-table-body" class="bg-white divide-y divide-gray-200">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+        <div id="user-activity-section" class="dashboard-section">
+            <!-- Nút Quay Lại và Tiêu Đề -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold">
+                    Hoạt động của:
+                    <span
+                        id="activity-username"
+                        class="text-indigo-600"
+                    ></span>
+                </h2>
+                <button
+                    onclick="showSection('users-section')"
+                    class="text-sm bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded-lg hover:bg-gray-300 inline-flex items-center"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-4 w-4 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15 19l-7-7 7-7"
+                        />
+                    </svg>
+                    Trở về Danh sách
+                </button>
+            </div>
+
+            <!-- Danh sách Reviews -->
+            <section class="mb-8">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">
+                    Đánh giá đã viết
+                </h3>
+                <div
+                    id="user-reviews-list"
+                    class="space-y-4 bg-white p-4 rounded-lg shadow"
+                >
+                    <p class="text-gray-500">Đang tải...</p>
+                </div>
+            </section>
+            <section>
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">
+                    Báo cáo đã gửi
+                </h3>
+                <div
+                    id="user-reports-list"
+                    class="space-y-4 bg-white p-4 rounded-lg shadow">
+                    <p class="text-gray-500">Đang tải...</p>
+                </div>
+            </section>
+        </div>
+        <div id="reports-section" class="dashboard-section">
+          <h2 class="text-xl font-semibold mb-4">Quản lý Báo cáo</h2>
+          <p class="text-sm text-gray-600 mb-4">Xem và xử lý các báo cáo từ người dùng.</p>
+ 
+          <div class="mb-4 border-b border-gray-200">
+              <nav class="-mb-px flex space-x-6">
+                  <button onclick="loadAllReports(null)" class="report-tab-filter py-2 px-1 border-b-2 border-indigo-500 text-indigo-600 font-medium text-sm">Tất cả</button>
+                  <button onclick="loadAllReports('pending')" class="report-tab-filter py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">Chờ xử lý (Pending)</button>
+                  <button onclick="loadAllReports('resolved')" class="report-tab-filter py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">Đã giải quyết (Resolved)</button>
+                  <button onclick="loadAllReports('dismissed')" class="report-tab-filter py-2 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium text-sm">Đã bỏ qua (Dismissed)</button>
+              </nav>
+          </div>
+
+          <div class="bg-white shadow rounded-lg overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200">
+                  <thead class="bg-gray-50">
+                      <tr>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Report ID</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người Báo cáo (ID)</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Người Bị Báo cáo (ID)</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lý do</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chi tiết</th>
+                          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                          <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Hành động</th>
+                      </tr>
+                  </thead>
+                  <tbody id="reports-table-body" class="bg-white divide-y divide-gray-200"> 
+                  </tbody>
+              </table>
+          </div>
+        </div>
+        <!-- thêm section -->
+        <div id="fees-section" class="dashboard-section">
+          <h2 class="text-xl font-semibold mb-4">Cấu hình Phí Dịch vụ</h2> 
+          <div class="flex justify-center"> 
+              <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+                  <form id="fees-form">
+                      <div class="space-y-4">
+                          <div>
+                              <label for="listing-fee-rate" class="block text-sm font-medium text-gray-700">Tỷ lệ phí Tin Đăng (Listing)</label>
+                              <input type="number" step="0.001" min="0" max="1" id="listing-fee-rate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="Ví dụ: 0.025 (cho 2.5%)">
+                              <p class="text-xs text-gray-500 mt-1">Nhập 0.025 cho 2.5%</p>
+                          </div>
+                          <div>
+                              <label for="auction-fee-rate" class="block text-sm font-medium text-gray-700">Tỷ lệ phí Đấu Giá (Auction)</label>
+                              <input type="number" step="0.001" min="0" max="1" id="auction-fee-rate" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="Ví dụ: 0.05 (cho 5%)">
+                              <p class="text-xs text-gray-500 mt-1">Nhập 0.05 cho 5%</p>
+                          </div>
+                      </div>
+                      <div class="mt-6">
+                          <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">
+                              Lưu Cấu hình Phí
+                          </button>
+                      </div>
+                  </form>
+              </div>
+          </div>
+        </div>
+ 
+       <!-- === SECTION THỐNG KÊ MỚI === -->
+        <div id="stats-section" class="dashboard-section space-y-6">
+          <h2 class="text-xl font-semibold mb-4">Thống Kê & Báo Cáo</h2>
+
+          <!-- KPI Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                  <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Tổng Doanh Thu (Đã hoàn thành)</h3>
+                  <p id="stats-total-revenue" class="mt-2 text-3xl font-semibold text-green-600">Đang tải...</p>
+              </div>
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                  <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Giao dịch Hoàn Thành</h3>
+                  <p id="stats-total-transactions" class="mt-2 text-3xl font-semibold text-indigo-600">Đang tải...</p>
+              </div>
+              <div class="bg-white p-6 rounded-lg shadow-lg">
+                  <h3 class="text-sm font-medium text-gray-500 uppercase tracking-wider">Thanh toán Chờ Duyệt</h3>
+                  <p id="stats-pending-payments" class="mt-2 text-3xl font-semibold text-yellow-600">Đang tải...</p>
+              </div>
+          </div> 
+          <div class="bg-white p-6 rounded-lg shadow-lg">
+              <h3 class="text-lg font-semibold mb-4">Doanh Thu 30 Ngày Gần Nhất</h3>
+              <div id="chart-container" class="relative hidden" style="height:40vh; width:100%;">
+                  <canvas id="revenue-chart"></canvas>
+              </div>
+              <div id="chart-loading" class="text-center p-8 text-gray-500">
+                  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500 mx-auto"></div>
+                  <p class="mt-2">Đang tải dữ liệu biểu đồ...</p>
+              </div>
+          </div>
+      </div>
+      <div id="pricing-data-section" class="dashboard-section space-y-6">
+        <h2 class="text-xl font-semibold mb-4">Quản lý Dữ liệu Gợi ý Giá (AI)</h2>
+        <p class="text-sm text-gray-600 mb-6 -mt-4">Thêm, xóa dữ liệu lịch sử bán xe và pin để cải thiện độ chính xác của gợi ý giá.</p>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-indigo-700">Thêm Dữ liệu Xe</h3>
+                <form id="add-vehicle-data-form" class="space-y-3">
+                    <input type="hidden" name="type" value="vehicle">
+                    <div>
+                        <label for="vehicle-brand" class="block text-sm font-medium text-gray-700">Hãng xe</label>
+                        <input type="text" id="vehicle-brand" name="brand" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="vehicle-model" class="block text-sm font-medium text-gray-700">Dòng xe</label>
+                        <input type="text" id="vehicle-model" name="model" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="vehicle-year" class="block text-sm font-medium text-gray-700">Năm</label>
+                        <input type="number" id="vehicle-year" name="year" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="vehicle-mileage" class="block text-sm font-medium text-gray-700">Số Km</label>
+                        <input type="number" id="vehicle-mileage" name="mileage" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="vehicle-sale-price" class="block text-sm font-medium text-gray-700">Giá bán (VNĐ)</label>
+                        <input type="number" id="vehicle-sale-price" name="sale_price" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700">Thêm Xe</button>
+                </form>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-lg font-semibold mb-4 text-green-700">Thêm Dữ liệu Pin</h3>
+                <form id="add-battery-data-form" class="space-y-3">
+                    <input type="hidden" name="type" value="battery">
+                    <div>
+                        <label for="battery-manufacturer" class="block text-sm font-medium text-gray-700">Nhà sản xuất</label>
+                        <input type="text" id="battery-manufacturer" name="manufacturer" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="battery-capacity" class="block text-sm font-medium text-gray-700">Dung lượng (kWh)</label>
+                        <input type="number" step="0.1" id="battery-capacity" name="capacity_kwh" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="battery-health" class="block text-sm font-medium text-gray-700">Tình trạng pin (%)</label>
+                        <input type="number" step="0.1" id="battery-health" name="health_percent" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="battery-sale-price" class="block text-sm font-medium text-gray-700">Giá bán (VNĐ)</label>
+                        <input type="number" id="battery-sale-price" name="sale_price" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 mt-[7.5rem]">Thêm Pin</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <h3 class="text-lg font-semibold p-4 border-b">Dữ liệu Xe hiện có</h3>
+                <div class="overflow-y-auto max-h-[500px]">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hãng/Dòng</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Năm/Km</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Giá bán</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicle-data-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="bg-white shadow rounded-lg overflow-hidden">
+                <h3 class="text-lg font-semibold p-4 border-b">Dữ liệu Pin hiện có</h3>
+                <div class="overflow-y-auto max-h-[500px]">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nhà SX</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">D.lượng/Pin</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Giá bán</th>
+                                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Xóa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="battery-data-table-body" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div id="bank-info-modal" class="modal fixed inset-0 bg-gray-600 bg-opacity-75 items-center justify-center p-4 z-50 hidden">
+      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+          <h3 id="bank-info-title" class="text-xl font-bold mb-6">Thông tin Ngân hàng (Người Bán)</h3>
+          
+          <div id="bank-info-content" class_name="space-y-3">
+              <p id="bank-info-loading" class="text-gray-500">Đang tải...</p>
+              
+              <div id="bank-info-details" class="hidden">
+                  <div>
+                      <label class="block text-sm font-medium text-gray-500">Tên Ngân hàng:</label>
+                      <p id="bank-info-name" class="text-lg font-semibold text-gray-900">---</p>
+                  </div>
+                  <div class="mt-4">
+                      <label class="block text-sm font-medium text-gray-500">Số tài khoản:</label>
+                      <p id="bank-info-number" class="text-lg font-semibold text-gray-900">---</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="flex justify-end space-x-3 mt-8">
+              <button type="button" onclick="closeModal('bank-info-modal')" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400">Đóng</button>
+          </div>
+      </div>
+    </div>
+    </main>
+    </div>
+
+    <script src="admin_scripts.js"></script>
+  </body>
+</html>

@@ -1,0 +1,421 @@
+version: "3.9"
+
+services:
+  # ========== DATABASE SERVICES ==========
+  # User Database
+  db-user:
+    image: postgres:14-alpine
+    container_name: user_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${USER_DB}
+    ports:
+      - "5433:5432"
+    volumes:
+      - user_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${USER_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Listing Database
+  db-listing:
+    image: postgres:14-alpine
+    container_name: listing_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${LISTING_DB}
+    ports:
+      - "5434:5432"
+    volumes:
+      - listing_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${LISTING_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Auction Database
+  db-auction:
+    image: postgres:14-alpine
+    container_name: auction_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${AUCTION_DB}
+    ports:
+      - "5435:5432"
+    volumes:
+      - auction_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${AUCTION_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-transaction:
+    image: postgres:14-alpine
+    container_name: transaction_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${TRANSACTION_DB}
+    ports:
+      - "5436:5432"
+    volumes:
+      - transaction_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${TRANSACTION_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-report:
+    image: postgres:14-alpine
+    container_name: report_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${REPORT_DB}
+    ports:
+      - "5438:5432"
+    volumes:
+      - report_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${REPORT_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  db-review:
+    image: postgres:14-alpine
+    container_name: review_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${REVIEW_DB}
+    ports:
+      - "5437:5432"
+    volumes:
+      - review_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${REVIEW_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  db-pricing:
+    image: postgres:14-alpine
+    container_name: pricing_db
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${PRICING_DB}
+    ports:
+      - "5439:5432"
+    volumes:
+      - pricing_data:/var/lib/postgresql/data
+    networks:
+      - ev_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${PRICING_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ========== REDIS CACHE ==========
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    ports:
+      - "6379:6379"
+    networks:
+      - ev_network
+
+  # ========== USER SERVICE ==========
+  user-service:
+    build: ./services/user-service
+    container_name: user_service
+    command: gunicorn --bind 0.0.0.0:5000 "app:create_app()"
+    volumes:
+      - ./services/user-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-user:5432/${USER_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./.env
+    depends_on:
+      db-user:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - ev_network
+
+  # ========== ADMIN SERVICE ==========
+  admin-service:
+    build: ./services/admin-service
+    container_name: admin_service
+    volumes:
+      - ./services/admin-service:/app
+    ports:
+      - "5004:5004"
+    env_file:
+      - ./.env
+    depends_on:
+      - user-service
+      - listing-service
+      - auction-service
+      - transaction-service
+    command: flask run --host=0.0.0.0 --port=5004
+    networks:
+      - ev_network
+
+  ai-pricing-service:
+    build: ./services/ai-pricing-service
+    container_name: pricing_service
+    command: gunicorn --bind 0.0.0.0:5007 "app:create_app()"
+    volumes:
+      - ./services/ai-pricing-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-pricing:5432/${PRICING_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+    ports:
+      - "5007:5007"
+    env_file:
+      - ./.env
+    depends_on:
+      db-pricing:
+        condition: service_healthy
+    networks:
+      - ev_network
+
+  # ========== LISTING SERVICE ==========
+  listing-service:
+    build: ./services/listing-service
+    container_name: listing_service
+    command: gunicorn --bind 0.0.0.0:5001 "app:create_app()"
+    volumes:
+      - ./services/listing-service:/app
+      - listing_uploads:/app/uploads
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-listing:5432/${LISTING_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./.env
+    depends_on:
+      db-listing:
+        condition: service_healthy
+    networks:
+      - ev_network
+
+  # ========== AUCTION SERVICE ==========
+  auction-service:
+    build: ./services/auction-service
+    container_name: auction_service
+    command: gunicorn --bind 0.0.0.0:5002 "app:create_app()"
+    volumes:
+      - ./services/auction-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-auction:5432/${AUCTION_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./.env
+    depends_on:
+      redis:
+        condition: service_started
+      db-auction:
+        condition: service_healthy
+    networks:
+      - ev_network
+
+  transaction-service:
+    build: ./services/transaction-service
+    container_name: transaction_service
+    command: gunicorn --bind 0.0.0.0:5003 "app:create_app()"
+    volumes:
+      - ./services/transaction-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-transaction:5432/${TRANSACTION_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+    ports:
+      - "5003:5003"
+    env_file:
+      - ./.env
+    depends_on:
+      db-transaction:
+        condition: service_healthy
+    networks:
+      - ev_network
+
+  report-service:
+    build: ./services/report-service
+    container_name: report_service
+    command: gunicorn --bind 0.0.0.0:5006 "app:create_app()"
+    volumes:
+      - ./services/report-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-report:5432/${REPORT_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+    ports:
+      - "5006:5006"
+    env_file:
+      - ./.env
+    depends_on:
+      db-report:
+        condition: service_healthy
+    networks:
+      - ev_network
+  review-service:
+    build: ./services/review-service
+    container_name: review_service
+    command: gunicorn --bind 0.0.0.0:5005 "app:create_app()"
+    volumes:
+      - ./services/review-service:/app
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-review:5432/${REVIEW_DB}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FLASK_ENV=development
+    ports:
+      - "5005:5005"
+    env_file:
+      - ./.env
+    depends_on:
+      db-review:
+        condition: service_healthy
+    networks:
+      - ev_network
+      
+  auction-worker: 
+    build: ./services/auction-service
+    container_name: auction_worker 
+    command: celery -A celery_app.celery_app worker --loglevel=info
+    volumes:
+      - ./services/auction-service:/app
+    depends_on:
+      db-auction:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment: 
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-auction:5432/${AUCTION_DB}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    networks:
+      - ev_network
+    env_file:  
+      - ./.env
+
+  auction-beat: 
+    build: ./services/auction-service
+    container_name: auction_beat 
+    command: celery -A celery_app.celery_app beat --loglevel=info
+    volumes:
+      - ./services/auction-service:/app
+    depends_on:
+      db-auction:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment: 
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db-auction:5432/${AUCTION_DB}
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    networks:
+      - ev_network
+    env_file:  
+      - ./.env
+  nifi:
+    image: apache/nifi:1.25.0
+    container_name: nifi_service
+    ports: 
+      - "8081:8080"  
+      - "8090:8090" 
+      - "8091:8091"
+    environment: 
+      - NIFI_WEB_HTTPS_PORT=
+      - NIFI_WEB_HTTP_PORT=8080
+      - NIFI_SECURITY_AUTHTYPE=
+      - NIFI_SECURITY_SSL_SUPPORTED=false 
+      - NIFI_SECURITY_KEYSTORE=
+      - NIFI_SECURITY_KEYSTORE_TYPE=
+      - NIFI_SECURITY_KEYSTORE_PASSWD=
+      - NIFI_SECURITY_TRUSTSTORE=
+      - NIFI_SECURITY_TRUSTSTORE_TYPE=
+      - NIFI_SECURITY_TRUSTSTORE_PASSWD=
+      - NIFI_INITIAL_ADMIN_IDENTITY=
+      - NIFI_SENSITIVE_PROPS_KEY=a-very-secret-key-1234
+    networks:
+      - ev_network
+    depends_on:
+      - transaction-service
+      - listing-service  
+
+  # ========== API GATEWAY (NGINX) ==========
+  api-gateway:
+    build: ./api-gateway
+    container_name: api_gateway
+    ports:
+      - "80:80"
+    volumes:
+      - listing_uploads:/usr/share/nginx/html/uploads:ro
+    depends_on:
+      - user-service
+      - listing-service
+      - auction-service
+      - transaction-service
+    networks:
+      - ev_network
+
+  # ========== FRONTEND ==========
+  frontend:
+    build: ./frontend
+    container_name: frontend_server
+    ports:
+      - "8080:80"
+    networks:
+      - ev_network
+
+# ========== NETWORKS ==========
+networks:
+  ev_network:
+    driver: bridge
+
+# ========== VOLUMES ==========
+volumes:
+  user_data:
+  listing_data:
+  auction_data:
+  transaction_data:
+  review_data:
+  report_data:
+  pricing_data:
+  listing_uploads:
