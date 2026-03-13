@@ -1,0 +1,56 @@
+{
+  "spec": "0.1.0-alpha.1",
+  "type": "summary",
+  "run_id": "1f11c656-9483-4310-8ca5-c43d7c58d25c",
+  "window": {
+    "start": "2026-03-10T09:42:01.994Z",
+    "end": "2026-03-10T09:49:27.610Z"
+  },
+  "load": {
+    "vus": 100,
+    "duration_ms": 600000
+  },
+  "totals": {
+    "samples": 3400,
+    "passes": 3400,
+    "fails": 0,
+    "error_rate": 0
+  },
+  "throughput": {
+    "rps_avg": 7.63
+  },
+  "latency": {
+    "unit": "ms",
+    "p50": null,
+    "p90": 13323,
+    "p95": 13498,
+    "p99": 13713,
+    "mean": 12473,
+    "max": 13924
+  },
+  "by_op": {
+    "Login": {
+      "samples": 3400,
+      "error_rate": 0,
+      "latency": {
+        "p50": null,
+        "p90": 13323,
+        "p95": 13498,
+        "p99": 13713
+      }
+    }
+  },
+  "x_postman": {
+    "run_info": {
+      "run_number": 1,
+      "name": null,
+      "collection_name": "EV_Platform_Automation",
+      "environment_name": "EV_Testing",
+      "elapsed_time": 7.43
+    },
+    "load_profile": {
+      "duration": 10,
+      "type": "Fixed"
+    }
+  }
+}
