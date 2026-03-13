@@ -16,9 +16,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -63,13 +61,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "register"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "register"]
             }
           },
           "response": []
@@ -105,13 +98,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "register"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "register"]
             }
           },
           "response": []
@@ -157,13 +145,110 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "login"
+              "host": ["{{url_base}}user"],
+              "path": ["api", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getProfile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get profile success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
               ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/profile",
+              "host": ["{{url_base}}user"],
+              "path": ["api", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateProfile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"update profile success\", function(){\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Profile updated message\", function () {\r",
+                  "    pm.expect(jsonData.message).to.eql(\"Profile updated\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"full_name\": \"Le Van Long\",\r\n \"phone_number\": \"123456\",\r\n \"address\": \"HCM\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/profile",
+              "host": ["{{url_base}}user"],
+              "path": ["api", "profile"]
             }
           },
           "response": []
