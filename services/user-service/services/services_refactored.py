@@ -3,7 +3,7 @@ import secrets
 import smtplib
 import string
 from email.mime.text import MIMEText
-
+import traceback
 from app import db, r
 from models.profile import Profile
 from models.user import User
@@ -186,6 +186,7 @@ class UserService:
             return True, "OTP has been sent to your email."
         except Exception as e: 
             print(f"ERROR sending email: {e}")
+            traceback.print_exc()
             return False, "Failed to send OTP email."
 
     @staticmethod
