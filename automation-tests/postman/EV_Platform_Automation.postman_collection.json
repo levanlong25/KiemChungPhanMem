@@ -252,6 +252,95 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "SendOTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"send otp success\", function(){\r",
+                  "    pm.response.to.have.status(200)\r",
+                  "})\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"OTP message exists\", function () {\r",
+                  "    pm.expect(jsonData.message).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"lvlong810@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/send-otp",
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "send-otp"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "reset-password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Reset password success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"email\": \"test@gmail.com\",\r\n  \"otp\": \"123456\",\r\n  \"new_password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/reset-password",
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
