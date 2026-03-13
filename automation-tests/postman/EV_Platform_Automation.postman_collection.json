@@ -11,6 +11,112 @@
       "name": "User_Service",
       "item": [
         {
+          "name": "register201",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"register success - status 201\", function(){\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "let jsonData = pm.response.json();\r",
+                  "pm.environment.set(\"username\", jsonData.user.username);\r",
+                  "pm.environment.set(\"email\", jsonData.user.email);\r",
+                  "pm.environment.set(\"password\", \"123456\");\r",
+                  "pm.test(\"Response has user\", function () {\r",
+                  "    pm.expect(jsonData.user).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Username returned\", function () {\r",
+                  "    pm.expect(jsonData.user.username).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"email\": \"test{{$timestamp}}@gmail.com\",\r\n \"username\": \"user{{$timestamp}}\",\r\n \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/register",
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "register409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"register fail\", function(){\r",
+                  "    pm.response.to.have.status(409);\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"abc\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}user/api/register",
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "login201",
           "event": [
             {
