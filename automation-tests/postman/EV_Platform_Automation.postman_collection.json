@@ -3,7 +3,7 @@
     "_postman_id": "ae460438-ce15-42c1-963e-49a4b75b9e5b",
     "name": "EV_Platform_Automation",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "43039888",
+    "_exporter_id": "53068209",
     "_collection_link": "https://go.postman.co/collection/43039888-ae460438-ce15-42c1-963e-49a4b75b9e5b?source=collection_link"
   },
   "item": [
@@ -16,7 +16,9 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [""],
+                "exec": [
+                  ""
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -52,7 +54,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"email\": \"test{{$timestamp}}@gmail.com\",\r\n \"username\": \"user{{$timestamp}}\",\r\n \"password\": \"123456\"\r\n}",
+              "raw": "{\r\n \"email\": \"duy6@gmail.com\",\r\n \"username\": \"duy6cotu\",\r\n \"password\": \"0123456\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -61,8 +63,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -98,8 +105,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -136,7 +148,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email_username\": \"{{email}}\",\r\n    \"password\": \"{{password}}\"\r\n}",
+              "raw": "{\r\n    \"email_username\": \"duong999888\",\r\n    \"password\": \"duong2005\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -145,8 +157,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -182,8 +199,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -232,8 +254,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -284,8 +311,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -326,8 +358,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/send-otp",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "send-otp"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "send-otp"
+              ]
             }
           },
           "response": []
@@ -363,8 +400,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/reset-password",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "reset-password"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "reset-password"
+              ]
             }
           },
           "response": []
@@ -411,8 +453,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/account",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "account"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "account"
+              ]
             }
           },
           "response": []
@@ -425,6 +472,462 @@
     },
     {
       "name": "Auction_Service",
+      "item": [
+        {
+          "name": "Get_Active_Auctions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time < 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}auction/api/",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get_Auction_Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction detail returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}auction/api/1",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get_Auction_By_Vehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/auction/api/vehicle/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "vehicle",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get_Auction_By_Battery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/auction/api/battery/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "battery",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create_Auction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"auction_type\": \"vehicle\",\r\n  \"vehicle_id\": 1,\r\n  \"current_bid\": 1000,\r\n  \"start_time\": \"2026-03-15T10:00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update_Auction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction updated\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"current_bid\": 2000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete_Auction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction deleted\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/auction/api/auctions/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "auctions",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Place_Bid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Bid placed\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"bid_amount\": 1200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/1/bid",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "1",
+                "bid"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My_Auctions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"My auctions returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/auction/api/my-auctions",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "my-auctions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "My_Winning_Bids",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"My bids returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/auction/api/my-bids",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "my-bids"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Transaction_Service",
+      "item": []
+    },
+    {
+      "name": "Review_Service",
+      "item": []
+    },
+    {
+      "name": "Report_Service",
       "item": []
     }
   ]
