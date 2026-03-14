@@ -3,7 +3,7 @@
     "_postman_id": "ae460438-ce15-42c1-963e-49a4b75b9e5b",
     "name": "EV_Platform_Automation",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53068209",
+    "_exporter_id": "53068256",
     "_collection_link": "https://go.postman.co/collection/43039888-ae460438-ce15-42c1-963e-49a4b75b9e5b?source=collection_link"
   },
   "item": [
@@ -920,168 +920,7 @@
     },
     {
       "name": "Transaction_Service",
-      "item": [
-        {
-          "name": "GetTransactionSeller",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api/transactions-seller",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions-seller"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "GetTransactionBuyer",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api/transactions-buyer",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions-buyer"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "createTrans",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api/transactions",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "create404",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api/transactions",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "contractSign",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "",
-                "transactions",
-                "{{transaction_id}}",
-                "contract",
-                "sign"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "payment",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"lvlong810@gmail.com\"\r\n}"
-            },
-            "url": {
-              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "",
-                "transactions",
-                "{{transaction_id}}",
-                "payment"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "updatePayment",
-          "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "",
-                "transactions",
-                "{{transaction_id}}",
-                "status"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "deleteTrans",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "",
-                "transactions",
-                "{{transaction_id}}"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
+      "item": []
     },
     {
       "name": "Review_Service",
@@ -1421,7 +1260,7 @@
             }
           ],
           "request": {
-            "method": "PUT",
+            "method": "DELETE",
             "header": [
               {
                 "key": "Authorization",
@@ -1430,7 +1269,7 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/10",
+              "raw": "{{url_base}}/review/api/reviews/1",
               "host": [
                 "{{url_base}}"
               ],
@@ -1438,9 +1277,134 @@
                 "review",
                 "api",
                 "reviews",
-                "10"
+                "1"
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reviews Of User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/user/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "user",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Reviews",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get my reviews success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/my-reviews",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "my-reviews"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reviews By Transaction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Reviews by transaction\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/transaction/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "transaction",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review – Unauthorized",
+          "request": {
+            "method": "GET",
+            "header": []
           },
           "response": []
         }
