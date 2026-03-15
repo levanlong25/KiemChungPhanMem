@@ -16,7 +16,9 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [""],
+                "exec": [
+                  ""
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -62,8 +64,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -99,8 +106,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -146,8 +158,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -183,8 +200,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -233,8 +255,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -285,8 +312,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -327,8 +359,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/send-otp",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "send-otp"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "send-otp"
+              ]
             }
           },
           "response": []
@@ -364,8 +401,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/reset-password",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "reset-password"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "reset-password"
+              ]
             }
           },
           "response": []
@@ -412,8 +454,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/account",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "account"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "account"
+              ]
             }
           },
           "response": []
@@ -424,41 +471,6 @@
       "name": "Listing_Service",
       "item": [
         {
-          "name": "getMyBattery",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"My Battery\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{url_base}}listing/api/my-assets/batteries",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries"]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "creatBattery",
           "event": [
             {
@@ -467,7 +479,11 @@
                 "exec": [
                   "pm.test(\"Battery created\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});"
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json()\r",
+                  "\r",
+                  "pm.environment.set(\"battery_id\", jsonData.battery.battery_id)"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -499,17 +515,116 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/batteries",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries"
+              ]
             }
           },
           "response": []
         },
         {
           "name": "updateBattery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Battery list returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 85,\r\n \"health_percent\": 90\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "/my-assets/batteries/{{battery_id}}",
+              "path": [
+                "my-assets",
+                "batteries",
+                "{{battery_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "getMyBattery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"My Battery\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": []
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries"
+              ]
+            }
           },
           "response": []
         },
@@ -522,7 +637,11 @@
                 "exec": [
                   "pm.test(\"Vehicle list returned\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});"
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json()\r",
+                  "\r",
+                  "pm.environment.set(\"vehicle_id\", jsonData.vehicle.vehicle_id)"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -551,7 +670,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 75,\r\n \"health_percent\": 90\r\n}",
+              "raw": "{\r\n \"brand\": \"abc\",\r\n \"model\": \"xyz\",\r\n \"year\": 2025,\r\n \"mileage\":2000\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -560,8 +679,14 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/vehicles",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles"
+              ]
             }
           },
           "response": []
@@ -597,22 +722,71 @@
             "method": "PUT",
             "header": [],
             "body": {
-              "mode": "file",
-              "file": {}
+              "mode": "raw",
+              "raw": "{\r\n \"brand\": \"abcde\",\r\n \"model\": \"xyznm\",\r\n \"year\": 2025,\r\n \"mileage\":200000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/vehicles/1",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles", "1"]
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles",
+                "{{vehicle_id}}"
+              ]
             }
           },
           "response": []
         },
         {
           "name": "GetMyVehicles",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"My Vehicle\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/vehicles",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles"
+              ]
+            }
           },
           "response": []
         },
@@ -625,7 +799,11 @@
                 "exec": [
                   "pm.test(\"Listing created\", function () {\r",
                   "    pm.response.to.have.status(201);\r",
-                  "});"
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json()\r",
+                  "\r",
+                  "pm.environment.set(\"listing_id\", jsonData.listing.listing_id)"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -657,8 +835,16 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/batteries/1/list",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries", "1", "list"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "1",
+                "list"
+              ]
             }
           },
           "response": []
@@ -704,17 +890,17 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/batteries/1/list",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries", "1", "list"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "1",
+                "list"
+              ]
             }
-          },
-          "response": []
-        },
-        {
-          "name": "RemoveListing",
-          "request": {
-            "method": "GET",
-            "header": []
           },
           "response": []
         },
@@ -737,6 +923,100 @@
           ],
           "request": {
             "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/listings",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "AddWatchList",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Added to watchlist\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"listing_id\": 5\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/watch-list",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetWatchList",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Watchlist returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
               "type": "bearer",
               "bearer": [
                 {
@@ -749,26 +1029,251 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}listing/api/listings",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "listings"]
+              "raw": "{{url_base}}listing/api/watch-list",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteWatchList",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Delete Watchlist\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/watch-list/by-listing/{{listing_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list",
+                "by-listing",
+                "{{listing_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RemoveListing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"delete listing\",function (){\r",
+                  "    pm.response.to.have.status(400)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}/list",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "{{battery_id}}",
+                "list"
+              ]
             }
           },
           "response": []
         },
         {
           "name": "DeleteBattery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"delete battery\",function (){\r",
+                  "    pm.response.to.have.status(400)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
-            "method": "GET",
-            "header": []
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "{{battery_id}}"
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "DeleteVehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"delete vehicle\",function (){\r",
+                  "    pm.response.to.have.status(400)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles",
+                "{{vehicle_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CompareListing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Compare success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/compare?id={{listing_id}}&id=1",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "compare"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{listing_id}}"
+                },
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
           },
           "response": []
         }
@@ -823,8 +1328,14 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", ""]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                ""
+              ]
             }
           },
           "response": []
@@ -859,8 +1370,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/",
-              "host": ["{{url_base}}auction"],
-              "path": ["api", ""]
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                ""
+              ]
             }
           },
           "response": []
@@ -887,8 +1403,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/{{auction_id}}",
-              "host": ["{{url_base}}auction"],
-              "path": ["api", "{{auction_id}}"]
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -915,8 +1436,15 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/auction/api/vehicle/{{vehicle_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "vehicle", "{{vehicle_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "vehicle",
+                "{{vehicle_id}}"
+              ]
             }
           },
           "response": []
@@ -943,8 +1471,15 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/auction/api/battery/1",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "battery", "1"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "battery",
+                "1"
+              ]
             }
           },
           "response": []
@@ -991,8 +1526,14 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/{{auction_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "{{auction_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -1039,8 +1580,15 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/{{auction_id}}/bid",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "{{auction_id}}", "bid"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "{{auction_id}}",
+                "bid"
+              ]
             }
           },
           "response": []
@@ -1078,8 +1626,14 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/my-auctions",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "my-auctions"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "my-auctions"
+              ]
             }
           },
           "response": []
@@ -1117,8 +1671,14 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/my-bids",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "my-bids"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "my-bids"
+              ]
             }
           },
           "response": []
@@ -1156,8 +1716,15 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/auctions/{{auction_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "auctions", "{{auction_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "auctions",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -1217,8 +1784,13 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
             }
           },
           "response": []
@@ -1265,8 +1837,13 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
             }
           },
           "response": []
@@ -1308,8 +1885,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-seller",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions-seller"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-seller"
+              ]
             }
           },
           "response": []
@@ -1351,8 +1933,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-buyer",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions-buyer"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-buyer"
+              ]
             }
           },
           "response": []
@@ -1390,7 +1977,9 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1435,7 +2024,9 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1490,7 +2081,9 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1544,7 +2137,9 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1598,7 +2193,9 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1651,7 +2248,9 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "",
@@ -1713,8 +2312,14 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -1766,8 +2371,14 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -1809,8 +2420,14 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -1857,8 +2474,15 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -1900,8 +2524,15 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -1943,8 +2574,15 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -1975,8 +2613,16 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/user/{{user_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "user", "{{user_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "user",
+                "{{user_id}}"
+              ]
             }
           },
           "response": []
@@ -2009,8 +2655,15 @@
             ],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/my-reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "my-reviews"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "my-reviews"
+              ]
             }
           },
           "response": []
@@ -2037,7 +2690,9 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/transaction/{{transaction_id}}",
-              "host": ["{{url_base}}"],
+              "host": [
+                "{{url_base}}"
+              ],
               "path": [
                 "review",
                 "api",
@@ -2077,8 +2732,15 @@
             ],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -2100,17 +2762,20 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
         }
       ]
-    },
-    {
-      "name": "Report_Service",
-      "item": []
     },
     {
       "name": "Report_Service",
@@ -2126,8 +2791,11 @@
                   "    pm.response.to.have.status(201);",
                   "});",
                   "",
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "pm.environment.set(\"reported_user_id\", jsonData.report.reported_user_id)",
+                  "",
                   "pm.test(\"Report created\", function () {",
-                  "    let jsonData = pm.response.json();",
                   "    pm.expect(jsonData.report).to.have.property(\"report_id\");",
                   "    pm.environment.set(\"report_id\", jsonData.report.report_id);",
                   "});"
@@ -2167,8 +2835,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -2219,8 +2892,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -2271,8 +2949,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -2313,8 +2996,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -2355,8 +3043,14 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports/{{report_id}}",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "{{report_id}}"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "{{report_id}}"
+              ]
             }
           },
           "response": []
@@ -2397,8 +3091,14 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports/{{report_id}}",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "{{report_id}}"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "{{report_id}}"
+              ]
             }
           },
           "response": []
@@ -2439,8 +3139,14 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports/99999",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "99999"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -2470,9 +3176,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}report/api/reports/transaction/1",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "transaction", "1"]
+              "raw": "{{url_base}}report/api/reports/transaction/{{transaction_id}}",
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "transaction",
+                "{{transaction_id}}"
+              ]
             }
           },
           "response": []
@@ -2498,9 +3211,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}report/api/reports/reported-user/2",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "reported-user", "2"]
+              "raw": "{{url_base}}report/api/reports/reported-user/{{reported_user_id}}",
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "reported-user",
+                "{{reported_user_id}}"
+              ]
             }
           },
           "response": []
@@ -2537,8 +3257,14 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}report/api/reports/my-reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "my-reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "my-reports"
+              ]
             }
           },
           "response": []
