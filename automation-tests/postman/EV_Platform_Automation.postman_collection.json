@@ -3,7 +3,7 @@
     "_postman_id": "ae460438-ce15-42c1-963e-49a4b75b9e5b",
     "name": "EV_Platform_Automation",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "53068256",
+    "_exporter_id": "43039888",
     "_collection_link": "https://go.postman.co/collection/43039888-ae460438-ce15-42c1-963e-49a4b75b9e5b?source=collection_link"
   },
   "item": [
@@ -16,7 +16,9 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [""],
+                "exec": [
+                  ""
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -33,6 +35,7 @@
                   "pm.environment.set(\"username\", jsonData.user.username);\r",
                   "pm.environment.set(\"email\", jsonData.user.email);\r",
                   "pm.environment.set(\"password\", \"123456\");\r",
+                  "pm.environment.set(\"user_id\", jsonData.user.user_id)\r",
                   "pm.test(\"Response has user\", function () {\r",
                   "    pm.expect(jsonData.user).to.exist;\r",
                   "});\r",
@@ -61,8 +64,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -98,8 +106,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -136,7 +149,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email_username\": \"duong999888\",\r\n    \"password\": \"duong2005\"\r\n}",
+              "raw": "{\r\n    \"email_username\": \"admin\",\r\n    \"password\": \"08102005\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -145,198 +158,12 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "getProfile",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Get profile success\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "updateProfile",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"update profile success\", function(){\r",
-                  "    pm.response.to.have.status(200)\r",
-                  "})\r",
-                  "let jsonData = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"Profile updated message\", function () {\r",
-                  "    pm.expect(jsonData.message).to.eql(\"Profile updated\");\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n \"full_name\": \"Le Van Long\",\r\n \"phone_number\": \"123456\",\r\n \"address\": \"HCM\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "SendOTP",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"send otp success\", function(){\r",
-                  "    pm.response.to.have.status(200)\r",
-                  "})\r",
-                  "let jsonData = pm.response.json();\r",
-                  "\r",
-                  "pm.test(\"OTP message exists\", function () {\r",
-                  "    pm.expect(jsonData.message).to.exist;\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"email\": \"lvlong810@gmail.com\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}user/api/send-otp",
               "host": [
                 "{{url_base}}user"
               ],
               "path": [
                 "api",
-                "send-otp"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "reset-password",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Reset password success\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"email\": \"test@gmail.com\",\r\n  \"otp\": \"123456\",\r\n  \"new_password\": \"12345678\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}user/api/reset-password",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "reset-password"
+                "login"
               ]
             }
           },
@@ -648,6 +475,64 @@
       "name": "Auction_Service",
       "item": [
         {
+          "name": "Create_Auction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "let jsonData = pm.response.json()\r",
+                  "pm.environment.set(\"auction_id\", jsonData.auction.auction_id)\r",
+                  "pm.environment.set(\"vehicle_id\", jsonData.auction.vehicle_id)\r",
+                  "pm.environment.set(\"battery_id\", jsonData.auction.battery_id)"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"auction_type\": \"vehicle\",\r\n  \"vehicle_id\": 5,\r\n  \"current_bid\": 1000,\r\n  \"start_time\": \"2026-03-15T08:00:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "Get_Active_Auctions",
           "event": [
             {
@@ -709,13 +594,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}auction/api/1",
+              "raw": "{{url_base}}auction/api/{{auction_id}}",
               "host": [
                 "{{url_base}}auction"
               ],
               "path": [
                 "api",
-                "1"
+                "{{auction_id}}"
               ]
             }
           },
@@ -742,7 +627,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}/auction/api/vehicle/1",
+              "raw": "{{url_base}}/auction/api/vehicle/{{vehicle_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -750,7 +635,7 @@
                 "auction",
                 "api",
                 "vehicle",
-                "1"
+                "{{vehicle_id}}"
               ]
             }
           },
@@ -786,60 +671,6 @@
                 "api",
                 "battery",
                 "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create_Auction",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Auction created\", function () {\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"auction_type\": \"vehicle\",\r\n  \"vehicle_id\": 1,\r\n  \"current_bid\": 1000,\r\n  \"start_time\": \"2026-03-15T10:00:00\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}/auction/api/",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                ""
               ]
             }
           },
@@ -886,60 +717,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/auction/api/1",
+              "raw": "{{url_base}}/auction/api/{{auction_id}}",
               "host": [
                 "{{url_base}}"
               ],
               "path": [
                 "auction",
                 "api",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete_Auction",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Auction deleted\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{url_base}}/auction/api/auctions/1",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "auctions",
-                "1"
+                "{{auction_id}}"
               ]
             }
           },
@@ -986,14 +771,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/auction/api/1/bid",
+              "raw": "{{url_base}}/auction/api/{{auction_id}}/bid",
               "host": [
                 "{{url_base}}"
               ],
               "path": [
                 "auction",
                 "api",
-                "1",
+                "{{auction_id}}",
                 "bid"
               ]
             }
@@ -1089,12 +874,587 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Delete_Auction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction deleted\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/auction/api/auctions/{{auction_id}}",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "auctions",
+                "{{auction_id}}"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
     {
       "name": "Transaction_Service",
-      "item": []
+      "item": [
+        {
+          "name": "createTrans",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Transaction created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"transaction_id\", jsonData.transaction.transaction_id)\r",
+                  "\r",
+                  "pm.test(\"Transaction id exists\", function () {\r",
+                  "    pm.expect(jsonData.transaction).to.have.property(\"transaction_id\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"listing_id\": 5,\r\n  \"seller_id\": 120,\r\n  \"final_price\": 2000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api/transactions",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Missing infor validation\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"listing_id\": 5,\r\n  \"final_price\": 2000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api/transactions",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetTransactionSeller",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}transaction/api/transactions-seller",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-seller"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetTransactionBuyer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}transaction/api/transactions-buyer",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-buyer"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contractSign200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Contract signed\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "contract",
+                "sign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "contractSign404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"not found transaction\", function(){\r",
+                  "    pm.response.to.have.status(404)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "contract",
+                "sign"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payment201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Payment created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payment_method\": \"bank\",\r\n  \"amount\": 2000\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "payment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payment400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Missing amount\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payment_method\": \"bank\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "payment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updatePayment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Transaction status updated\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"new_status\": \"paid\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateInvalid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Invalid status payment\", function(){\r",
+                  "    pm.response.to.have.status(400)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"new_status\": \"abc\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "",
+                "transactions",
+                "{{transaction_id}}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     },
     {
       "name": "Review_Service",
@@ -1110,8 +1470,11 @@
                   "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"review_id\", jsonData.review.review_id)\r",
+                  "\r",
                   "pm.test(\"Review created\", function () {\r",
-                  "    let jsonData = pm.response.json();\r",
                   "    pm.expect(jsonData.review).to.have.property(\"review_id\");\r",
                   "});"
                 ],
@@ -1302,7 +1665,7 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/1",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -1310,7 +1673,7 @@
                 "review",
                 "api",
                 "reviews",
-                "1"
+                "{{review_id}}"
               ]
             }
           },
@@ -1352,7 +1715,7 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/1",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -1360,7 +1723,7 @@
                 "review",
                 "api",
                 "reviews",
-                "1"
+                "{{review_id}}"
               ]
             }
           },
@@ -1402,7 +1765,7 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/1",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -1410,48 +1773,7 @@
                 "review",
                 "api",
                 "reviews",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Review",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Review deleted\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{url_base}}/review/api/reviews/1",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "1"
+                "{{review_id}}"
               ]
             }
           },
@@ -1482,7 +1804,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/user/1",
+              "raw": "{{url_base}}/review/api/reviews/user/{{user_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -1491,7 +1813,7 @@
                 "api",
                 "reviews",
                 "user",
-                "1"
+                "{{user_id}}"
               ]
             }
           },
@@ -1559,7 +1881,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/transaction/1",
+              "raw": "{{url_base}}/review/api/reviews/transaction/{{transaction_id}}",
               "host": [
                 "{{url_base}}"
               ],
@@ -1568,7 +1890,48 @@
                 "api",
                 "reviews",
                 "transaction",
-                "1"
+                "{{transaction_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Review",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Review deleted\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
               ]
             }
           },
@@ -1577,8 +1940,30 @@
         {
           "name": "Delete Review – Unauthorized",
           "request": {
-            "method": "GET",
-            "header": []
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
+            }
           },
           "response": []
         }
