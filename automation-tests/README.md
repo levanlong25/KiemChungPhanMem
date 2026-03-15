@@ -9,6 +9,7 @@ pip install -r requirements.txt
 ## Environment Variables
 
 Configure `postman/EV_Testing.postman_environment.json` with:
+
 - `url_base`: Base URL of the API (e.g., `http://localhost/`)
 - `token`: JWT token for authentication
 - `username`: Test username

@@ -19,6 +19,7 @@ cp .env.example .env
 ```
 
 Edit `.env`:
+
 ```
 DATABASE_URL=postgresql://user:password@localhost:5432/report_db
 JWT_SECRET_KEY=your_secret_key_here
@@ -76,6 +77,7 @@ docker run -e DATABASE_URL="postgresql://..." \
 ## Database
 
 Report model includes:
+
 - `report_id` - Primary key
 - `reporter_id` - User making report
 - `transaction_id` - Transaction being reported
