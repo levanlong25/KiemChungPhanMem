@@ -1,0 +1,69 @@
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 1. KHOI TAO USER SERVICE ===" 
+"=== 1. KHOI TAO USER SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec user-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec user-service flask db migrate -m "Initial user service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec user-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 2. KHOI TAO LISTING SERVICE ===" 
+"=== 2. KHOI TAO LISTING SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec listing-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec listing-service flask db migrate -m "Initial listing service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec listing-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 3. KHOI TAO AUCTION SERVICE ===" 
+"=== 3. KHOI TAO AUCTION SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec auction-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec auction-service flask db migrate -m "Initial auction service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec auction-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 4. KHOI TAO TRANSACTION SERVICE ===" 
+"=== 4. KHOI TAO TRANSACTION SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec transaction-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec transaction-service flask db migrate -m "Initial transaction service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec transaction-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 5. KHOI TAO REVIEW SERVICE ===" 
+"=== 5. KHOI TAO REVIEW SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec review-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec review-service flask db migrate -m "Initial review service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec review-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 6. KHOI TAO REPORT SERVICE ===" 
+"=== 6. KHOI TAO REPORT SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec report-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec report-service flask db migrate -m "Initial report service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec report-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== 7. KHOI TAO AI PRICING SERVICE ===" 
+"=== 7. KHOI TAO AI PRICING SERVICE ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec ai-pricing-service flask db init 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec ai-pricing-service flask db migrate -m "Initial ai pricing service tables" 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>docker-compose exec ai-pricing-service flask db upgrade 
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>echo "=== HOAN TAT! ===" 
+"=== HOAN TAT! ==="
+
+C:\Users\Windows\Downloads\KiemChungPhanMem>pause
+Press any key to continue . . . 

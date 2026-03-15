@@ -16,9 +16,7 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [
-                  ""
-                ],
+                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -64,13 +62,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "register"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "register"]
             }
           },
           "response": []
@@ -106,13 +99,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "register"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "register"]
             }
           },
           "response": []
@@ -158,13 +146,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "login"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "login"]
             }
           },
           "response": []
@@ -200,13 +183,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "login"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "login"]
             }
           },
           "response": []
@@ -255,13 +233,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "profile"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "profile"]
             }
           },
           "response": []
@@ -312,13 +285,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "profile"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "profile"]
             }
           },
           "response": []
@@ -359,13 +327,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/send-otp",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "send-otp"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "send-otp"]
             }
           },
           "response": []
@@ -401,13 +364,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/reset-password",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "reset-password"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "reset-password"]
             }
           },
           "response": []
@@ -454,13 +412,8 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/account",
-              "host": [
-                "{{url_base}}user"
-              ],
-              "path": [
-                "api",
-                "account"
-              ]
+              "host": ["{{url_base}}user"],
+              "path": ["api", "account"]
             }
           },
           "response": []
@@ -469,7 +422,357 @@
     },
     {
       "name": "Listing_Service",
-      "item": []
+      "item": [
+        {
+          "name": "getMyBattery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"My Battery\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "batteries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "creatBattery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Battery created\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 75,\r\n \"health_percent\": 90\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "batteries"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updateBattery",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Createvehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Vehicle list returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 75,\r\n \"health_percent\": 90\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/vehicles",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "vehicles"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Updatevehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Vehicle list returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "file",
+              "file": {}
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/1",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "vehicles", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GetMyVehicles",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "CreateListing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Listing created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"title\": \"Tesla Battery\",\r\n \"price\": 2000,\r\n \"description\": \"Good condition\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries/1/list",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "batteries", "1", "list"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "listing400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"missing create\",function (){\r",
+                  "    pm.response.to.have.status(400)\r",
+                  "})"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"title\": \"Tesla Battery\",\r\n \"description\": \"Good condition\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}listing/api/my-assets/batteries/1/list",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "my-assets", "batteries", "1", "list"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "RemoveListing",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "GetList",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Listings returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/listings",
+              "host": ["{{url_base}}listing"],
+              "path": ["api", "listings"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteBattery",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "DeleteVehicle",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        }
+      ]
     },
     {
       "name": "Auction_Service",
@@ -520,14 +823,8 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                ""
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", ""]
             }
           },
           "response": []
@@ -562,13 +859,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/",
-              "host": [
-                "{{url_base}}auction"
-              ],
-              "path": [
-                "api",
-                ""
-              ]
+              "host": ["{{url_base}}auction"],
+              "path": ["api", ""]
             }
           },
           "response": []
@@ -595,13 +887,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/{{auction_id}}",
-              "host": [
-                "{{url_base}}auction"
-              ],
-              "path": [
-                "api",
-                "{{auction_id}}"
-              ]
+              "host": ["{{url_base}}auction"],
+              "path": ["api", "{{auction_id}}"]
             }
           },
           "response": []
@@ -628,15 +915,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/auction/api/vehicle/{{vehicle_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "vehicle",
-                "{{vehicle_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "vehicle", "{{vehicle_id}}"]
             }
           },
           "response": []
@@ -663,15 +943,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/auction/api/battery/1",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "battery",
-                "1"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "battery", "1"]
             }
           },
           "response": []
@@ -718,14 +991,8 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/{{auction_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "{{auction_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "{{auction_id}}"]
             }
           },
           "response": []
@@ -772,15 +1039,8 @@
             },
             "url": {
               "raw": "{{url_base}}/auction/api/{{auction_id}}/bid",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "{{auction_id}}",
-                "bid"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "{{auction_id}}", "bid"]
             }
           },
           "response": []
@@ -818,14 +1078,8 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/my-auctions",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "my-auctions"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "my-auctions"]
             }
           },
           "response": []
@@ -863,14 +1117,8 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/my-bids",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "my-bids"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "my-bids"]
             }
           },
           "response": []
@@ -908,15 +1156,8 @@
             ],
             "url": {
               "raw": "{{url_base}}/auction/api/auctions/{{auction_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "auction",
-                "api",
-                "auctions",
-                "{{auction_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["auction", "api", "auctions", "{{auction_id}}"]
             }
           },
           "response": []
@@ -976,13 +1217,8 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions"
-              ]
+              "host": ["{{url_base}}transaction"],
+              "path": ["api", "transactions"]
             }
           },
           "response": []
@@ -1029,13 +1265,8 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions"
-              ]
+              "host": ["{{url_base}}transaction"],
+              "path": ["api", "transactions"]
             }
           },
           "response": []
@@ -1077,13 +1308,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-seller",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions-seller"
-              ]
+              "host": ["{{url_base}}transaction"],
+              "path": ["api", "transactions-seller"]
             }
           },
           "response": []
@@ -1125,13 +1351,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-buyer",
-              "host": [
-                "{{url_base}}transaction"
-              ],
-              "path": [
-                "api",
-                "transactions-buyer"
-              ]
+              "host": ["{{url_base}}transaction"],
+              "path": ["api", "transactions-buyer"]
             }
           },
           "response": []
@@ -1169,9 +1390,7 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1216,9 +1435,7 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/contract/sign",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1273,9 +1490,7 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1329,9 +1544,7 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/payment",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1385,9 +1598,7 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1440,9 +1651,7 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api//transactions/{{transaction_id}}/status",
-              "host": [
-                "{{url_base}}transaction"
-              ],
+              "host": ["{{url_base}}transaction"],
               "path": [
                 "api",
                 "",
@@ -1504,14 +1713,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews"]
             }
           },
           "response": []
@@ -1563,14 +1766,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews"]
             }
           },
           "response": []
@@ -1612,14 +1809,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews"]
             }
           },
           "response": []
@@ -1666,15 +1857,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "{{review_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "{{review_id}}"]
             }
           },
           "response": []
@@ -1716,15 +1900,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "{{review_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "{{review_id}}"]
             }
           },
           "response": []
@@ -1766,15 +1943,8 @@
             },
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "{{review_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "{{review_id}}"]
             }
           },
           "response": []
@@ -1805,16 +1975,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/user/{{user_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "user",
-                "{{user_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "user", "{{user_id}}"]
             }
           },
           "response": []
@@ -1847,15 +2009,8 @@
             ],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/my-reviews",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "my-reviews"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "my-reviews"]
             }
           },
           "response": []
@@ -1882,9 +2037,7 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/transaction/{{transaction_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
+              "host": ["{{url_base}}"],
               "path": [
                 "review",
                 "api",
@@ -1924,15 +2077,8 @@
             ],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "{{review_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "{{review_id}}"]
             }
           },
           "response": []
@@ -1954,15 +2100,8 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": [
-                "{{url_base}}"
-              ],
-              "path": [
-                "review",
-                "api",
-                "reviews",
-                "{{review_id}}"
-              ]
+              "host": ["{{url_base}}"],
+              "path": ["review", "api", "reviews", "{{review_id}}"]
             }
           },
           "response": []
