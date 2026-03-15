@@ -25,6 +25,9 @@ def create_report():
 
     if not transaction_id or not reported_user_id or not reason:
         return jsonify(error="Missing required fields"), 400
+    
+    if not isinstance(reason, str) or len(reason) > 100:
+        return jsonify(error="Reason must be string max 100 chars"), 400
 
     report, error_type = ReportService.create_report(
         transaction_id=transaction_id,

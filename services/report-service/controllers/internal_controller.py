@@ -40,6 +40,10 @@ def update_report_status(report_id):
     new_status = data.get('status')
     if not new_status:
         return jsonify(error="Missing status"), 400
+    
+    valid_statuses = ['pending', 'reviewed', 'resolved', 'dismissed']
+    if new_status not in valid_statuses:
+        return jsonify(error=f"Status must be one of {valid_statuses}"), 400
 
     report, message = ReportService.update_report_status(report_id, new_status)
     if not report:

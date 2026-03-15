@@ -9,6 +9,9 @@ class ReportService:
     @staticmethod
     def create_report(transaction_id, reporter_id, reported_user_id, reason, details=None):
         try:
+            if reporter_id == reported_user_id:
+                return None, "duplicate"
+            
             existing = Report.query.filter_by(
                 transaction_id=transaction_id,
                 reporter_id=reporter_id
