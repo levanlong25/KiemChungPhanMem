@@ -125,10 +125,10 @@ def send_otp():
     if not email:
         return jsonify({"error": "Email is required"}), 400
     
-    success, message = UserLogic.send_reset_otp(email)
+    success, message, otp = UserLogic.send_reset_otp(email)
     if not success:
         return jsonify(error=message), 404
-    return jsonify(message=message), 200
+    return jsonify(message=message, otp = otp), 200
 
 @api_bp.route("/reset-password", methods=["POST"])
 def reset_password():

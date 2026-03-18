@@ -67,5 +67,57 @@ def create_app():
                 print(f"Lỗi khi tạo admin: {error}")
             else:
                 print(f"Tài khoản admin '{username}' đã được tạo thành công.")
+    
+    @app.cli.command("create-member")
+    @click.argument("username")
+    @click.argument("email")
+    @click.argument("password")
+    def create_member_command(username, email, password): 
+        with app.app_context():
+            from services.services_refactored import UserService
+            
+            if UserService.get_user_by_email_or_username(email) or UserService.get_user_by_email_or_username(username):
+                print(f"Lỗi: Người dùng với email '{email}' hoặc tên đăng nhập '{username}' đã tồn tại.")
+                return
+
+            user, error = UserService.create_user(
+                email=email,
+                username=username,
+                password=password,
+                role='member' 
+            )
+            if error:
+                print(f"Lỗi khi tạo member: {error}")
+            else:
+                print(f"Tài khoản member '{username}' đã được tạo thành công.")
+    @app.cli.command("seed-test-members")
+    @click.argument("count", default=100)
+    def seed_test_members_command(count): 
+        """Lệnh tự động tạo hàng loạt tài khoản member để test tải"""
+        with app.app_context():
+            from services.services_refactored import UserService
+            
+            created_count = 0
+            for i in range(1, count + 1):
+                username = f"tester_ev_{i}"
+                email = f"test_{i}@uth_testing.com"
+                password = "Password123!" # Dùng chung 1 pass để dễ test Postman
+                
+                # Kiểm tra tồn tại trước khi tạo để tránh lỗi trùng lặp
+                if not (UserService.get_user_by_email_or_username(email) or 
+                        UserService.get_user_by_email_or_username(username)):
+                    
+                    user, error = UserService.create_user(
+                        email=email,
+                        username=username,
+                        password=password,
+                        role='member' 
+                    )
+                    if not error:
+                        created_count += 1
+                        if i % 10 == 0: # Cứ 10 user thì in ra thông báo một lần
+                            print(f"Đang tạo... {i}/{count}")
+            
+            print(f"===> THÀNH CÔNG: Đã tạo mới {created_count} tài khoản member.")
             
     return app

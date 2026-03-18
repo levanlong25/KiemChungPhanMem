@@ -1,4 +1,3 @@
-# controllers/report_controller.py
 from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt # Import get_jwt nếu cần check role
 from services.report_service import ReportService # Import service
@@ -120,4 +119,3 @@ def get_my_reports_api():
     except Exception as e:
          logger.error(f"Lỗi khi lấy báo cáo của user {user_id}: {e}", exc_info=True)
          return jsonify(error="Lỗi máy chủ nội bộ."), 500
-

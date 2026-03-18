@@ -1,0 +1,50 @@
+name: EV Platform CI/CD
+
+on:
+  pull_request:
+    branches: [ "main", "develop", "release-1" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create .env file for Docker
+      run: |
+        echo "POSTGRES_USER=postgres" >> .env
+        echo "POSTGRES_PASSWORD=password123" >> .env
+        echo "USER_DB=user_db" >> .env
+        echo "LISTING_DB=listing_db" >> .env
+        echo "AUCTION_DB=auction_db" >> .env
+        echo "TRANSACTION_DB=transaction_db" >> .env
+        echo "REPORT_DB=report_db" >> .env
+        echo "REVIEW_DB=review_db" >> .env
+        echo "PRICING_DB=pricing_db" >> .env
+        echo "JWT_SECRET_KEY=test_secret" >> .env
+
+    - name: Start Microservices
+      run: docker compose up -d --build
+
+    - name: Initialize All Microservices Databases
+      run: |
+        echo "Waiting for all databases to be ready..."
+        sleep 20
+        # Danh sách các service cần tạo bảng
+        services=("user_service" "listing_service" "auction_service" "transaction_service" "review_service" "report_service")
+        
+        for s in "${services[@]}"; do
+          echo "Initializing $s..."
+          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || echo "$s already initialized or failed"
+        done
+    - name: Wait for API Gateway Ready
+      run: |
+        timeout 60s bash -c 'until curl -s http://localhost/user/api/login > /dev/null; do sleep 5; done'
+
+    - name: Run Postman Tests
+      run: |
+        npm install -g newman
+        newman run "automation-tests/postman/EV_Platform_Automation.postman_collection.json" \
+                   -e "automation-tests/postman/EV_Testing.postman_environment.json" \
+                   --env-var "url_base=http://localhost/"

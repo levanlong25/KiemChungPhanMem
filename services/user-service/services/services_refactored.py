@@ -3,7 +3,7 @@ import secrets
 import smtplib
 import string
 from email.mime.text import MIMEText
-
+import traceback
 from app import db, r
 from models.profile import Profile
 from models.user import User
@@ -166,7 +166,7 @@ class UserService:
     def send_reset_otp(email):
         user = User.query.filter_by(email=email).first()
         if not user:
-            return False, "Email does not exist"
+            return False, "Email does not exist", None
         
         otp = ''.join(secrets.choice(string.digits) for _ in range(6)) 
         r.setex(f"otp:{email}", 300, otp)
@@ -183,10 +183,11 @@ class UserService:
                 server.login(UserService.SENDER_EMAIL, UserService.APP_PASSWORD)
                 server.sendmail(UserService.SENDER_EMAIL, email, msg.as_string())
             
-            return True, "OTP has been sent to your email."
+            return True, "OTP has been sent to your email.", otp
         except Exception as e: 
             print(f"ERROR sending email: {e}")
-            return False, "Failed to send OTP email."
+            traceback.print_exc()
+            return False, "Failed to send OTP email.", None
 
     @staticmethod
     def verify_otp_and_reset_password(email, input_otp, new_password): 

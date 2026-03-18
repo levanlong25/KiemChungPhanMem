@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!-- Các bước khởi động dự án: -->
 - docker-compose up -d --build
 - truy cap http://localhost:8081/nifi/ run 
@@ -76,6 +75,3 @@ http://localhost:8081/nifi/
 docker-compose exec ai-pricing-service python seed.py
 <!-- chay ngrok -->
 ngrok http 80
-=======
-# KiemChungPhanMem
->>>>>>> 9df694d593b0467bf653884563a5d90d311dbac9

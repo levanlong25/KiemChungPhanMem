@@ -4,4 +4,4 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 EXPOSE 5006
-CMD ["gunicorn", "--bind", "0.0.0.0:5006", "app:create_app()"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5006", "app:create_app"]
