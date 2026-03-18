@@ -2,7 +2,7 @@ name: EV Platform CI/CD
 
 on:
   pull_request:
-    branches: [ "main", "release-1" ]
+    branches: [ "main", "develop", "release-1" ]
 
 jobs:
   build-and-test:
@@ -11,8 +11,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # Bước 1: Tạo file .env để các database không bị lỗi khởi động
-    - name: Create .env file
+    - name: Create .env file for Docker
       run: |
         echo "POSTGRES_USER=postgres" >> .env
         echo "POSTGRES_PASSWORD=password123" >> .env
@@ -25,18 +24,25 @@ jobs:
         echo "PRICING_DB=pricing_db" >> .env
         echo "JWT_SECRET_KEY=test_secret" >> .env
 
-    # Bước 2: Dùng 'docker compose' (Chuẩn V2 của GitHub)
-    - name: Start Services
+    - name: Start Microservices
       run: docker compose up -d --build
 
-    # Bước 3: Đợi Nginx Gateway sẵn sàng (Tăng lên 120s vì hệ thống Microservices nặng)
-    - name: Wait for API Ready
+    - name: Initialize All Microservices Databases
       run: |
-        echo "Waiting for EV Platform to wake up..."
-        timeout 120s bash -c 'until curl -s http://localhost/user/api/login > /dev/null; do sleep 5; echo "Still waiting for Nginx Gateway..."; done'
+        echo "Waiting for all databases to be ready..."
+        sleep 20
+        # Danh sách các service cần tạo bảng
+        services=("user_service" "listing_service" "auction_service" "transaction_service" "review_service" "report_service")
+        
+        for s in "${services[@]}"; do
+          echo "Initializing $s..."
+          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || echo "$s already initialized or failed"
+        done
+    - name: Wait for API Gateway Ready
+      run: |
+        timeout 60s bash -c 'until curl -s http://localhost/user/api/login > /dev/null; do sleep 5; done'
 
-    # Bước 4: Chạy Newman (Postman)
-    - name: Run Newman Tests
+    - name: Run Postman Tests
       run: |
         npm install -g newman
         newman run "automation-tests/postman/EV_Platform_Automation.postman_collection.json" \
