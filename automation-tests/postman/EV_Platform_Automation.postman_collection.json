@@ -1312,7 +1312,7 @@
       "name": "Auction_Service",
       "item": [
         {
-          "name": "Create_Auction",
+          "name": "Create_Auction_Vehicle",
           "event": [
             {
               "listen": "test",
@@ -1321,10 +1321,57 @@
                   "pm.test(\"Auction created\", function () {\r",
                   "    pm.response.to.have.status(201);\r",
                   "});\r",
-                  "let jsonData = pm.response.json()\r",
-                  "pm.environment.set(\"auction_id\", jsonData.auction.auction_id)\r",
-                  "pm.environment.set(\"vehicle_id\", jsonData.auction.vehicle_id)\r",
-                  "pm.environment.set(\"battery_id\", jsonData.auction.battery_id)"
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "let auction = jsonData.auction;\r",
+                  "\r",
+                  "// kiểm tra tồn tại\r",
+                  "pm.test(\"Auction object exists\", function () {\r",
+                  "    pm.expect(auction).to.not.be.undefined;\r",
+                  "});\r",
+                  "\r",
+                  "// kiểm tra field chung\r",
+                  "pm.test(\"Check common fields\", function () {\r",
+                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"bidder_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
+                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
+                  "});\r",
+                  "\r",
+                  "// kiểm tra enum\r",
+                  "pm.test(\"Check auction_type\", function () {\r",
+                  "    pm.expect([\"vehicle\",\"battery\"]).to.include(auction.auction_type);\r",
+                  "});\r",
+                  "\r",
+                  "// kiểm tra theo loại đấu giá\r",
+                  "pm.test(\"Check type specific fields\", function () {\r",
+                  "\r",
+                  "    if(auction.auction_type === \"vehicle\"){\r",
+                  "        pm.expect(auction.vehicle_id).to.not.be.null;\r",
+                  "        pm.expect(auction.battery_id).to.be.oneOf([null, undefined]);\r",
+                  "    }\r",
+                  "\r",
+                  "    if(auction.auction_type === \"battery\"){\r",
+                  "        pm.expect(auction.battery_id).to.not.be.null;\r",
+                  "        pm.expect(auction.vehicle_id).to.be.oneOf([null, undefined]);\r",
+                  "    }\r",
+                  "\r",
+                  "});\r",
+                  "\r",
+                  "// kiểm tra time\r",
+                  "pm.test(\"Check start_time < end_time\", function () {\r",
+                  "    let start = new Date(auction.start_time);\r",
+                  "    let end = new Date(auction.end_time);\r",
+                  "    pm.expect(start).to.be.below(end);\r",
+                  "});\r",
+                  "\r",
+                  "// lưu id\r",
+                  "pm.environment.set(\"auction_id\", auction.auction_id);\r",
+                  "pm.environment.set(\"vehicle_id\", auction.vehicle_id);\r",
+                  "pm.environment.set(\"battery_id\", auction.battery_id);"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1348,7 +1395,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"auction_type\": \"vehicle\",\r\n \"vehicle_id\": {{vehicle_id}},\r\n \"current_bid\": 1000,\r\n \"start_time\": \"2026-06-16T14:00:00+07:00\"\r\n}\r\n",
+              "raw": "{\r\n \"auction_type\": \"vehicle\",\r\n \"vehicle_id\": {{vehicle_id}},\r\n \"current_bid\": 1000,\r\n \"start_time\": \"2026-04-16T14:00:00+07:00\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1356,11 +1403,12 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}auction/api/",
+              "raw": "{{url_base}}/auction/api/",
               "host": [
-                "{{url_base}}auction"
+                "{{url_base}}"
               ],
               "path": [
+                "auction",
                 "api",
                 ""
               ]
@@ -1418,6 +1466,50 @@
                 "exec": [
                   "pm.test(\"Auction detail returned\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let auction = pm.response.json();\r",
+                  "\r",
+                  "// check fields theo model\r",
+                  "pm.test(\"Check fields\", function () {\r",
+                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"bidder_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"vehicle_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"battery_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
+                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
+                  "    pm.expect(auction).to.have.property(\"winning_bidder_id\");\r",
+                  "});\r",
+                  "\r",
+                  "// check enum\r",
+                  "pm.test(\"Check auction_type\", function () {\r",
+                  "    pm.expect([\"vehicle\",\"battery\"]).to.include(auction.auction_type);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Check auction_status\", function () {\r",
+                  "    pm.expect(\r",
+                  "        [\"pending\",\"prepare\",\"started\",\"ended\",\"rejected\"]\r",
+                  "    ).to.include(auction.auction_status);\r",
+                  "});\r",
+                  "\r",
+                  "// check logic vehicle/battery\r",
+                  "pm.test(\"Check type specific\", function () {\r",
+                  "    if(auction.auction_type === \"vehicle\"){\r",
+                  "        pm.expect(auction.vehicle_id).to.not.be.null;\r",
+                  "    }\r",
+                  "    if(auction.auction_type === \"battery\"){\r",
+                  "        pm.expect(auction.battery_id).to.not.be.null;\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "// check time\r",
+                  "pm.test(\"Check start < end\", function () {\r",
+                  "    let start = new Date(auction.start_time);\r",
+                  "    let end = new Date(auction.end_time);\r",
+                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -1437,6 +1529,146 @@
               "path": [
                 "api",
                 "{{auction_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get_Auction_By_Vehicle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let auction = pm.response.json();\r",
+                  "\r",
+                  "// check fields\r",
+                  "pm.test(\"Check fields\", function () {\r",
+                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"vehicle_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
+                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
+                  "});\r",
+                  "\r",
+                  "// phải là vehicle\r",
+                  "pm.test(\"Check auction type is vehicle\", function () {\r",
+                  "    pm.expect(auction.auction_type).to.eql(\"vehicle\");\r",
+                  "});\r",
+                  "\r",
+                  "// vehicle_id phải tồn tại\r",
+                  "pm.test(\"Check vehicle_id exists\", function () {\r",
+                  "    pm.expect(auction.vehicle_id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "// battery phải null\r",
+                  "pm.test(\"Check battery_id null\", function () {\r",
+                  "    pm.expect(auction.battery_id).to.be.oneOf([null, undefined]);\r",
+                  "});\r",
+                  "\r",
+                  "// check time\r",
+                  "pm.test(\"Check start < end\", function () {\r",
+                  "    let start = new Date(auction.start_time);\r",
+                  "    let end = new Date(auction.end_time);\r",
+                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/auction/api/vehicle/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "vehicle",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get_Auction_By_Battery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Auction returned\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "let auction = pm.response.json();\r",
+                  "\r",
+                  "// check fields\r",
+                  "pm.test(\"Check fields\", function () {\r",
+                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"battery_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
+                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
+                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
+                  "});\r",
+                  "\r",
+                  "// phải là battery\r",
+                  "pm.test(\"Check auction type is battery\", function () {\r",
+                  "    pm.expect(auction.auction_type).to.eql(\"battery\");\r",
+                  "});\r",
+                  "\r",
+                  "// battery_id phải tồn tại\r",
+                  "pm.test(\"Check battery_id exists\", function () {\r",
+                  "    pm.expect(auction.battery_id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "// vehicle phải null\r",
+                  "pm.test(\"Check vehicle_id null\", function () {\r",
+                  "    pm.expect(auction.vehicle_id).to.be.oneOf([null, undefined]);\r",
+                  "});\r",
+                  "\r",
+                  "// check time\r",
+                  "pm.test(\"Check start < end\", function () {\r",
+                  "    let start = new Date(auction.start_time);\r",
+                  "    let end = new Date(auction.end_time);\r",
+                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}/auction/api/battery/1",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "battery",
+                "1"
               ]
             }
           },
@@ -1483,13 +1715,69 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}auction/api/{{auction_id}}",
+              "raw": "{{url_base}}/auction/api/{{auction_id}}",
               "host": [
-                "{{url_base}}auction"
+                "{{url_base}}"
               ],
               "path": [
+                "auction",
                 "api",
                 "{{auction_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Place_Bid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Bid placed\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"bid_amount\": 1200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/{{auction_id}}/bid",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                "{{auction_id}}",
+                "bid"
               ]
             }
           },
@@ -1527,11 +1815,12 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}auction/api/my-auctions",
+              "raw": "{{url_base}}/auction/api/my-auctions",
               "host": [
-                "{{url_base}}auction"
+                "{{url_base}}"
               ],
               "path": [
+                "auction",
                 "api",
                 "my-auctions"
               ]
@@ -1571,11 +1860,12 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}auction/api/my-bids",
+              "raw": "{{url_base}}/auction/api/my-bids",
               "host": [
-                "{{url_base}}auction"
+                "{{url_base}}"
               ],
               "path": [
+                "auction",
                 "api",
                 "my-bids"
               ]
@@ -1615,14 +1905,112 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}auction/api/auctions/{{auction_id}}",
+              "raw": "{{url_base}}/auction/api/auctions/{{auction_id}}",
               "host": [
-                "{{url_base}}auction"
+                "{{url_base}}"
               ],
               "path": [
+                "auction",
                 "api",
                 "auctions",
                 "{{auction_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create_Auction_Battery",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Battery auction created\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "let auction = jsonData.auction;\r",
+                  "\r",
+                  "// check object\r",
+                  "pm.test(\"Auction object exists\", function () {\r",
+                  "    pm.expect(auction).to.not.be.undefined;\r",
+                  "});\r",
+                  "\r",
+                  "// check type battery\r",
+                  "pm.test(\"Check auction type battery\", function () {\r",
+                  "    pm.expect(auction.auction_type).to.eql(\"battery\");\r",
+                  "});\r",
+                  "\r",
+                  "// battery_id phải có\r",
+                  "pm.test(\"Check battery_id exists\", function () {\r",
+                  "    pm.expect(auction.battery_id).to.not.be.null;\r",
+                  "});\r",
+                  "\r",
+                  "// vehicle_id phải null\r",
+                  "pm.test(\"Check vehicle_id null\", function () {\r",
+                  "    pm.expect(auction.vehicle_id).to.be.oneOf([null, undefined]);\r",
+                  "});\r",
+                  "\r",
+                  "// check field theo model\r",
+                  "pm.test(\"Check required fields\", function () {\r",
+                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"bidder_id\");\r",
+                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
+                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
+                  "});\r",
+                  "\r",
+                  "// check time\r",
+                  "pm.test(\"Check start < end\", function () {\r",
+                  "    let start = new Date(auction.start_time);\r",
+                  "    let end = new Date(auction.end_time);\r",
+                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
+                  "});\r",
+                  "\r",
+                  "// lưu biến\r",
+                  "pm.environment.set(\"auction_battery_id\", auction.auction_id);\r",
+                  "pm.environment.set(\"battery_id\", auction.battery_id);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bidder_id\": 11,\r\n  \"auction_type\": \"battery\",\r\n  \"battery_id\": 1,\r\n  \"current_bid\": 1000,\r\n  \"start_time\": \"2026-04-16T14:00:00+07:00\",\r\n  \"end_time\": \"2026-04-16T16:00:00+07:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/auction/api/",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "auction",
+                "api",
+                ""
               ]
             }
           },
@@ -1645,65 +2033,13 @@
                   "});\r",
                   "\r",
                   "let jsonData = pm.response.json();\r",
-                  "let transaction = jsonData.transaction;\r",
                   "\r",
-                  "// Lưu id\r",
-                  "pm.environment.set(\"transaction_id\", transaction.transaction_id);\r",
+                  "pm.environment.set(\"transaction_id\", jsonData.transaction.transaction_id)\r",
                   "\r",
-                  "// ===== EXISTENCE =====\r",
-                  "pm.test(\"Transaction object exists\", function () {\r",
-                  "    pm.expect(transaction).to.be.an(\"object\");\r",
+                  "pm.test(\"Transaction id exists\", function () {\r",
+                  "    pm.expect(jsonData.transaction).to.have.property(\"transaction_id\");\r",
                   "});\r",
-                  "\r",
-                  "pm.test(\"All required fields exist\", function () {\r",
-                  "    pm.expect(transaction).to.have.property(\"transaction_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"buyer_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"seller_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"final_price\");\r",
-                  "    pm.expect(transaction).to.have.property(\"transaction_status\");\r",
-                  "    pm.expect(transaction).to.have.property(\"created_at\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== TYPE CHECK =====\r",
-                  "pm.test(\"Field types are correct\", function () {\r",
-                  "    pm.expect(transaction.transaction_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.buyer_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.seller_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.final_price).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.transaction_status).to.be.a(\"string\");\r",
-                  "    pm.expect(transaction.created_at).to.be.a(\"string\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== OPTIONAL FIELDS =====\r",
-                  "pm.test(\"Optional fields are valid\", function () {\r",
-                  "    if (transaction.auction_id !== null) {\r",
-                  "        pm.expect(transaction.auction_id).to.be.a(\"number\");\r",
-                  "    }\r",
-                  "    if (transaction.listing_id !== null) {\r",
-                  "        pm.expect(transaction.listing_id).to.be.a(\"number\");\r",
-                  "    }\r",
-                  "});\r",
-                  "\r",
-                  "// ===== ENUM CHECK =====\r",
-                  "pm.test(\"transaction_status is valid enum\", function () {\r",
-                  "    const validStatus = [\"pending\", \"awaiting_payment\", \"paid\"];\r",
-                  "    pm.expect(validStatus).to.include(transaction.transaction_status);\r",
-                  "});\r",
-                  "\r",
-                  "// ===== BUSINESS LOGIC =====\r",
-                  "pm.test(\"Buyer and Seller must be different\", function () {\r",
-                  "    pm.expect(transaction.buyer_id).to.not.eql(transaction.seller_id);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Final price must be positive\", function () {\r",
-                  "    pm.expect(transaction.final_price).to.be.above(0);\r",
-                  "});\r",
-                  "\r",
-                  "// ===== DATE FORMAT =====\r",
-                  "pm.test(\"created_at is valid ISO date\", function () {\r",
-                  "    let date = new Date(transaction.created_at);\r",
-                  "    pm.expect(date.toISOString()).to.eql(transaction.created_at);\r",
-                  "});"
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1810,62 +2146,7 @@
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "let jsonData = pm.response.json();\r",
-                  "let transaction = jsonData.transaction;\r",
-                  "\r",
-                  "// ===== EXISTENCE =====\r",
-                  "pm.test(\"Transaction object exists\", function () {\r",
-                  "    pm.expect(transaction).to.be.an(\"object\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== REQUIRED FIELDS =====\r",
-                  "pm.test(\"All required fields exist\", function () {\r",
-                  "    pm.expect(transaction).to.have.property(\"transaction_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"buyer_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"seller_id\");\r",
-                  "    pm.expect(transaction).to.have.property(\"final_price\");\r",
-                  "    pm.expect(transaction).to.have.property(\"transaction_status\");\r",
-                  "    pm.expect(transaction).to.have.property(\"created_at\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== TYPE CHECK =====\r",
-                  "pm.test(\"Field types are correct\", function () {\r",
-                  "    pm.expect(transaction.transaction_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.buyer_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.seller_id).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.final_price).to.be.a(\"number\");\r",
-                  "    pm.expect(transaction.transaction_status).to.be.a(\"string\");\r",
-                  "    pm.expect(transaction.created_at).to.be.a(\"string\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== ENUM CHECK =====\r",
-                  "pm.test(\"transaction_status is valid\", function () {\r",
-                  "    const validStatus = [\"pending\", \"awaiting_payment\", \"paid\"];\r",
-                  "    pm.expect(validStatus).to.include(transaction.transaction_status);\r",
-                  "});\r",
-                  "\r",
-                  "// ===== BUSINESS LOGIC =====\r",
-                  "pm.test(\"Buyer and Seller must be different\", function () {\r",
-                  "    pm.expect(transaction.buyer_id).to.not.eql(transaction.seller_id);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Final price must be positive\", function () {\r",
-                  "    pm.expect(transaction.final_price).to.be.above(0);\r",
-                  "});\r",
-                  "\r",
-                  "// ===== DATE FORMAT =====\r",
-                  "pm.test(\"created_at is valid ISO date\", function () {\r",
-                  "    let date = new Date(transaction.created_at);\r",
-                  "    pm.expect(date.toISOString()).to.eql(transaction.created_at);\r",
-                  "});\r",
-                  "\r",
-                  "// ===== CONSISTENCY (nếu đã lưu từ create) =====\r",
-                  "pm.test(\"Transaction ID matches stored ID\", function () {\r",
-                  "    let savedId = pm.environment.get(\"transaction_id\");\r",
-                  "    if (savedId) {\r",
-                  "        pm.expect(transaction.transaction_id).to.eql(Number(savedId));\r",
-                  "    }\r",
-                  "});"
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1909,37 +2190,7 @@
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
-                  "\r",
-                  "let jsonData = pm.response.json();\r",
-                  "let transaction = jsonData.transaction;\r",
-                  "\r",
-                  "// structure\r",
-                  "pm.test(\"Transaction exists\", function () {\r",
-                  "    pm.expect(transaction).to.be.an(\"object\");\r",
-                  "});\r",
-                  "\r",
-                  "// field cơ bản\r",
-                  "pm.test(\"Has required fields\", function () {\r",
-                  "    pm.expect(transaction).to.include.all.keys(\r",
-                  "        \"transaction_id\",\r",
-                  "        \"buyer_id\",\r",
-                  "        \"seller_id\",\r",
-                  "        \"final_price\",\r",
-                  "        \"transaction_status\",\r",
-                  "        \"created_at\"\r",
-                  "    );\r",
-                  "});\r",
-                  "\r",
-                  "// logic cơ bản\r",
-                  "pm.test(\"Final price > 0\", function () {\r",
-                  "    pm.expect(transaction.final_price).to.be.above(0);\r",
-                  "});\r",
-                  "\r",
-                  "// enum\r",
-                  "pm.test(\"Valid status\", function () {\r",
-                  "    pm.expect([\"pending\",\"awaiting_payment\",\"paid\"])\r",
-                  "        .to.include(transaction.transaction_status);\r",
-                  "});"
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1980,44 +2231,10 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Status code is 200\", function () {\r",
+                  "pm.test(\"Contract signed\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
-                  "\r",
-                  "let jsonData = pm.response.json();\r",
-                  "let contract = jsonData.contract;\r",
-                  "\r",
-                  "// ===== STRUCTURE =====\r",
-                  "pm.test(\"Response has contract\", function () {\r",
-                  "    pm.expect(contract).to.be.an(\"object\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== FIELD CHECK =====\r",
-                  "pm.test(\"Contract has signing fields\", function () {\r",
-                  "    pm.expect(contract).to.have.property(\"signed_by_buyer\");\r",
-                  "    pm.expect(contract).to.have.property(\"signed_by_seller\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== LOGIC =====\r",
-                  "// ít nhất 1 bên phải đã ký\r",
-                  "pm.test(\"At least one party has signed\", function () {\r",
-                  "    pm.expect(\r",
-                  "        contract.signed_by_buyer || contract.signed_by_seller\r",
-                  "    ).to.be.true;\r",
-                  "});\r",
-                  "\r",
-                  "// ===== MESSAGE CHECK =====\r",
-                  "pm.test(\"Response has message\", function () {\r",
-                  "    pm.expect(jsonData).to.have.property(\"message\");\r",
-                  "});\r",
-                  "\r",
-                  "// ===== OPTIONAL: kiểm tra khi cả 2 đã ký =====\r",
-                  "if (contract.signed_by_buyer && contract.signed_by_seller) {\r",
-                  "    pm.test(\"Both signed -> should move to awaiting_payment\", function () {\r",
-                  "        // cần gọi GET transaction để verify chính xác\r",
-                  "        pm.expect(jsonData.message).to.include(\"chờ thanh toán\");\r",
-                  "    });\r",
-                  "}"
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
