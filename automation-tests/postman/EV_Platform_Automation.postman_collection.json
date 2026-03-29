@@ -2507,11 +2507,34 @@
                   "});\r",
                   "\r",
                   "let jsonData = pm.response.json();\r",
+                  "let review = jsonData.review;\r",
                   "\r",
-                  "pm.environment.set(\"review_id\", jsonData.review.review_id)\r",
+                  "// Lưu review_id\r",
+                  "pm.environment.set(\"review_id\", review.review_id);\r",
                   "\r",
-                  "pm.test(\"Review created\", function () {\r",
-                  "    pm.expect(jsonData.review).to.have.property(\"review_id\");\r",
+                  "// 1. Check đầy đủ field\r",
+                  "pm.test(\"Check all required fields\", function () {\r",
+                  "    pm.expect(review).to.have.property(\"review_id\");\r",
+                  "    pm.expect(review).to.have.property(\"transaction_id\");\r",
+                  "    pm.expect(review).to.have.property(\"reviewer_id\");\r",
+                  "    pm.expect(review).to.have.property(\"reviewed_user_id\");\r",
+                  "    pm.expect(review).to.have.property(\"rating\");\r",
+                  "    pm.expect(review).to.have.property(\"comment\");\r",
+                  "    pm.expect(review).to.have.property(\"created_at\");\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Check kiểu dữ liệu\r",
+                  "pm.test(\"Check data types\", function () {\r",
+                  "    pm.expect(review.review_id).to.be.a(\"number\");\r",
+                  "    pm.expect(review.transaction_id).to.be.a(\"number\");\r",
+                  "    pm.expect(review.reviewer_id).to.be.a(\"number\");\r",
+                  "    pm.expect(review.reviewed_user_id).to.be.a(\"number\");\r",
+                  "    pm.expect(review.rating).to.be.a(\"number\");\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Check logic rating (giống model)\r",
+                  "pm.test(\"Rating must be between 0 and 5\", function () {\r",
+                  "    pm.expect(review.rating).to.be.within(0, 5);\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -2531,7 +2554,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": {{transaction_id}},\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
+              "raw": "{\r\n \"transaction_id\": 1,\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2539,11 +2562,12 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}review/api/reviews",
+              "raw": "{{url_base}}/review/api/reviews",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews"
               ]
@@ -2589,7 +2613,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": {{transaction_id}},\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
+              "raw": "{\r\n \"transaction_id\": 1,\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2597,11 +2621,12 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}review/api/reviews",
+              "raw": "{{url_base}}/review/api/reviews",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews"
               ]
@@ -2637,7 +2662,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": {{transaction_id}}\r\n}",
+              "raw": "{\r\n \"transaction_id\": 1\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2645,11 +2670,12 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}review/api/reviews",
+              "raw": "{{url_base}}/review/api/reviews",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews"
               ]
@@ -2698,11 +2724,62 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Review - Unauthorized",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Unauthorized update blocked\", function () {\r",
+                  "    pm.response.to.have.status(403);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"rating\": 3,\r\n \"comment\": \"update by another user\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}"
+              ],
+              "path": [
+                "review",
                 "api",
                 "reviews",
                 "{{review_id}}"
@@ -2747,11 +2824,12 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "{{review_id}}"
@@ -2771,9 +2849,44 @@
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 1. Check array\r",
                   "pm.test(\"Response is array\", function () {\r",
-                  "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
-                  "});"
+                  "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Nếu có data thì test từng phần tử\r",
+                  "if (jsonData.length > 0) {\r",
+                  "\r",
+                  "    jsonData.forEach((review) => {\r",
+                  "\r",
+                  "        // Check field\r",
+                  "        pm.test(\"Check fields exist\", function () {\r",
+                  "            pm.expect(review).to.have.property(\"review_id\");\r",
+                  "            pm.expect(review).to.have.property(\"transaction_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewer_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewed_user_id\");\r",
+                  "            pm.expect(review).to.have.property(\"rating\");\r",
+                  "            pm.expect(review).to.have.property(\"comment\");\r",
+                  "            pm.expect(review).to.have.property(\"created_at\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check kiểu dữ liệu\r",
+                  "        pm.test(\"Check data types\", function () {\r",
+                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check logic rating\r",
+                  "        pm.test(\"Rating valid\", function () {\r",
+                  "            pm.expect(review.rating).to.be.within(0, 5);\r",
+                  "        });\r",
+                  "\r",
+                  "    });\r",
+                  "\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -2785,11 +2898,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}review/api/reviews/user/{{user_id}}",
+              "raw": "{{url_base}}/review/api/reviews/user/{{user_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "user",
@@ -2806,9 +2920,50 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Get my reviews success\", function () {\r",
+                  "pm.test(\"Status code 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});"
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 1. Check array\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Xử lý dữ liệu\r",
+                  "if (jsonData.length === 0) {\r",
+                  "    console.log(\"No reviews found\");\r",
+                  "} else {\r",
+                  "\r",
+                  "    jsonData.forEach((review) => {\r",
+                  "\r",
+                  "        // Check field\r",
+                  "        pm.test(\"Check fields exist\", function () {\r",
+                  "            pm.expect(review).to.have.property(\"review_id\");\r",
+                  "            pm.expect(review).to.have.property(\"transaction_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewer_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewed_user_id\");\r",
+                  "            pm.expect(review).to.have.property(\"rating\");\r",
+                  "            pm.expect(review).to.have.property(\"comment\");\r",
+                  "            pm.expect(review).to.have.property(\"created_at\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check kiểu dữ liệu\r",
+                  "        pm.test(\"Check data types\", function () {\r",
+                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check logic rating\r",
+                  "        pm.test(\"Rating valid\", function () {\r",
+                  "            pm.expect(review.rating).to.be.within(0, 5);\r",
+                  "        });\r",
+                  "\r",
+                  "    });\r",
+                  "\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -2826,11 +2981,12 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}review/api/reviews/my-reviews",
+              "raw": "{{url_base}}/review/api/reviews/my-reviews",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "my-reviews"
@@ -2846,9 +3002,50 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Reviews by transaction\", function () {\r",
+                  "pm.test(\"Status code 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});"
+                  "});\r",
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "\r",
+                  "// 1. Check array\r",
+                  "pm.test(\"Response is array\", function () {\r",
+                  "    pm.expect(jsonData).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Xử lý dữ liệu\r",
+                  "if (jsonData.length === 0) {\r",
+                  "    console.log(\"No reviews found\");\r",
+                  "} else {\r",
+                  "\r",
+                  "    jsonData.forEach((review) => {\r",
+                  "\r",
+                  "        // Check field\r",
+                  "        pm.test(\"Check fields exist\", function () {\r",
+                  "            pm.expect(review).to.have.property(\"review_id\");\r",
+                  "            pm.expect(review).to.have.property(\"transaction_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewer_id\");\r",
+                  "            pm.expect(review).to.have.property(\"reviewed_user_id\");\r",
+                  "            pm.expect(review).to.have.property(\"rating\");\r",
+                  "            pm.expect(review).to.have.property(\"comment\");\r",
+                  "            pm.expect(review).to.have.property(\"created_at\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check kiểu dữ liệu\r",
+                  "        pm.test(\"Check data types\", function () {\r",
+                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
+                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
+                  "        });\r",
+                  "\r",
+                  "        // Check logic rating\r",
+                  "        pm.test(\"Rating valid\", function () {\r",
+                  "            pm.expect(review.rating).to.be.within(0, 5);\r",
+                  "        });\r",
+                  "\r",
+                  "    });\r",
+                  "\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -2860,11 +3057,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}review/api/reviews/transaction/{{transaction_id}}",
+              "raw": "{{url_base}}/review/api/reviews/transaction/{{transaction_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "transaction",
@@ -2901,11 +3099,12 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "{{review_id}}"
@@ -2916,6 +3115,19 @@
         },
         {
           "name": "Delete Review – Unauthorized",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -2928,13 +3140,20 @@
               ]
             },
             "method": "DELETE",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
             "url": {
-              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
               "host": [
-                "{{url_base}}review"
+                "{{url_base}}"
               ],
               "path": [
+                "review",
                 "api",
                 "reviews",
                 "{{review_id}}"
