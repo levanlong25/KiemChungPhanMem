@@ -1,3 +1,4 @@
 # Bỏ qua tất cả thư mục migration của các service
 **/migrations/
 __pycache__/
+celerybeat-schedule
