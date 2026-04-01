@@ -89,7 +89,10 @@ def register():
     data = request.get_json()
     if not data or not all(k in data for k in ["email", "username", "password"]):
         return jsonify({"error": "Missing required fields: email, username, password"}), 400
-    
+    if len(data["username"]) < 3 or data["username"] > 20:
+        return jsonify({"error": "The minimum length of the username must be 6 and the maximum must be 20"}), 400
+    if len(data["password"]) < 6 or data["password"] > 128:
+        return jsonify({"error": "The minimum length of the password must be 6 and the maximum must be 128"}), 400
     user, error = UserLogic.create_user(data["email"], data["username"], data["password"])
     if error:
         return jsonify({"error": error}), 409
@@ -135,7 +138,8 @@ def reset_password():
     data = request.get_json()
     if not data or not all(k in data for k in ["email", "otp", "new_password"]):
         return jsonify({"error": "Missing required fields: email, otp, new_password"}), 400
-    
+    if len(data["new_password"]) < 6 or data["new_password"] > 128:
+        return jsonify({"error": "The minimum length of the new password must be 6 and the maximum must be 128"}), 400
     success, message = UserLogic.verify_otp_and_reset_password(data["email"], data["otp"], data["new_password"])
     if not success:
         return jsonify(error=message), 400
