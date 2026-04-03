@@ -335,6 +335,42 @@ def place_bid(auction_id):
     current_user_id = int(get_jwt_identity())
     data = request.get_json()
 
+    # Kiểm tra dữ liệu đầu vào
+    if not data or 'bid_amount' not in data:
+        return jsonify({"error": "Missing 'bid_amount' in request body"}), 400
+
+    # Parse bid_amount
+    try:
+        bid_amount = float(data['bid_amount'])
+    except (ValueError, TypeError):
+        return jsonify({"error": "'bid_amount' must be a valid number"}), 400
+
+    # Validate khoảng giá
+    if bid_amount <= 0 or bid_amount >= 100000000:
+        return jsonify({
+            "error": "Giá đặt phải lớn hơn 0 và nhỏ hơn 100 triệu"
+        }), 400
+
+    # Gọi service xử lý
+    try:
+        auction, message = AuctionService.place_bid(
+            auction_id, current_user_id, bid_amount
+        )
+
+        if not auction:
+            return jsonify({"error": message}), 400
+
+        return jsonify({
+            "message": message,
+            "auction": serialize_auction(auction)
+        }), 200
+
+    except Exception as e:
+        logger.error(f"Error placing bid on auction {auction_id}: {e}", exc_info=True)
+        return jsonify({"error": "An internal error occurred."}), 500
+    current_user_id = int(get_jwt_identity())
+    data = request.get_json()
+
     if not data or 'bid_amount' not in data:
         return jsonify({"error": "Missing 'bid_amount' in request body"}), 400
 
