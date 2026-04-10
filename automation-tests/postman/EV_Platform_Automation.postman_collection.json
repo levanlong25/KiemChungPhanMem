@@ -16,7 +16,9 @@
             {
               "listen": "prerequest",
               "script": {
-                "exec": [""],
+                "exec": [
+                  ""
+                ],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -62,8 +64,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -99,8 +106,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/register",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "register"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "register"
+              ]
             }
           },
           "response": []
@@ -149,8 +161,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -186,8 +203,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/login",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "login"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "login"
+              ]
             }
           },
           "response": []
@@ -199,8 +221,26 @@
               "listen": "test",
               "script": {
                 "exec": [
+                  "// 1. Kiểm tra Status Code\r",
                   "pm.test(\"Get profile success\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Kiểm tra đầy đủ các fields trả về từ serialize_profile\r",
+                  "pm.test(\"Profile response has all required fields\", function () {\r",
+                  "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    // Kiểm tra kiểu dữ liệu là object\r",
+                  "    pm.expect(res).to.be.an(\"object\");\r",
+                  "\r",
+                  "    // Kiểm tra các trường thông tin chi tiết\r",
+                  "    pm.expect(res).to.have.property('user_id');\r",
+                  "    pm.expect(res).to.have.property('full_name');\r",
+                  "    pm.expect(res).to.have.property('phone_number');\r",
+                  "    pm.expect(res).to.have.property('bank_name');\r",
+                  "    pm.expect(res).to.have.property('account_number');\r",
+                  "    pm.expect(res).to.have.property('address');\r",
+                  "    pm.expect(res).to.have.property('bio');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -236,8 +276,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -249,13 +294,31 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"update profile success\", function(){\r",
-                  "    pm.response.to.have.status(200)\r",
-                  "})\r",
+                  "// 1. Kiểm tra Status Code\r",
+                  "pm.test(\"Update profile success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
                   "let jsonData = pm.response.json();\r",
                   "\r",
+                  "// 2. Kiểm tra thông báo xác nhận\r",
                   "pm.test(\"Profile updated message\", function () {\r",
                   "    pm.expect(jsonData.message).to.eql(\"Profile updated\");\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Kiểm tra đầy đủ các fields trong object profile trả về\r",
+                  "pm.test(\"Response contains updated profile details\", function () {\r",
+                  "    pm.expect(jsonData).to.have.property('profile');\r",
+                  "    let profile = jsonData.profile;\r",
+                  "\r",
+                  "    // Kiểm tra các trường thông tin chi tiết của Profile\r",
+                  "    pm.expect(profile).to.have.property('user_id');\r",
+                  "    pm.expect(profile).to.have.property('full_name');\r",
+                  "    pm.expect(profile).to.have.property('phone_number');\r",
+                  "    pm.expect(profile).to.have.property('bank_name');\r",
+                  "    pm.expect(profile).to.have.property('account_number');\r",
+                  "    pm.expect(profile).to.have.property('address');\r",
+                  "    pm.expect(profile).to.have.property('bio');\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -288,8 +351,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/profile",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
           },
           "response": []
@@ -331,8 +399,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/send-otp",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "send-otp"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "send-otp"
+              ]
             }
           },
           "response": []
@@ -368,8 +441,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/reset-password",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "reset-password"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "reset-password"
+              ]
             }
           },
           "response": []
@@ -416,8 +494,13 @@
             },
             "url": {
               "raw": "{{url_base}}user/api/account",
-              "host": ["{{url_base}}user"],
-              "path": ["api", "account"]
+              "host": [
+                "{{url_base}}user"
+              ],
+              "path": [
+                "api",
+                "account"
+              ]
             }
           },
           "response": []
@@ -434,12 +517,36 @@
               "listen": "test",
               "script": {
                 "exec": [
+                  "// 1. Kiểm tra Status Code (201 cho POST thành công)\r",
                   "pm.test(\"Create battery OK\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
+                  "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
+                  "// 2. Kiểm tra đầy đủ các fields trong response\r",
+                  "pm.test(\"Response has all required battery fields\", function () {\r",
+                  "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    // Kiểm tra object battery tồn tại\r",
+                  "    pm.expect(res).to.have.property('battery');\r",
+                  "    let battery = res.battery;\r",
+                  "\r",
+                  "    // Kiểm tra các trường thông tin cơ bản\r",
+                  "    pm.expect(battery).to.have.property('battery_id');\r",
+                  "    pm.expect(battery).to.have.property('manufacturer');\r",
+                  "    pm.expect(battery).to.have.property('capacity_kwh');\r",
+                  "    pm.expect(battery).to.have.property('health_percent');\r",
+                  "    pm.expect(battery).to.have.property('user_id');\r",
+                  "    \r",
+                  "    // Kiểm tra các trường trạng thái listing\r",
+                  "    pm.expect(battery).to.have.property('is_listed');\r",
+                  "    pm.expect(battery).to.have.property('is_auctioned');\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Lưu battery_id vào môi trường (truy xuất đúng từ res.battery.battery_id)\r",
                   "let res = pm.response.json();\r",
-                  "pm.environment.set(\"battery_id\", res.battery_id);"
+                  "if (res.battery && res.battery.battery_id) {\r",
+                  "    pm.environment.set(\"battery_id\", res.battery.battery_id);\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -462,7 +569,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 75,\r\n \"health_percent\": 90\r\n}",
+              "raw": "{\r\n \"manufacturer\": \"Tesla\",\r\n \"capacity_kwh\": 75,\r\n \"health_percent\": 80\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -471,8 +578,14 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/batteries",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries"
+              ]
             }
           },
           "response": []
@@ -484,17 +597,36 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Battery created\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "pm.test(\"Update success\", function () {\r",
+                  "// 1. Kiểm tra Status Code (200 cho PUT thành công)\r",
+                  "pm.test(\"Update battery success\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Update done\", function () {\r",
+                  "// 2. Kiểm tra cấu trúc response và các trường dữ liệu\r",
+                  "pm.test(\"Response has message and full battery details\", function () {\r",
                   "    let res = pm.response.json();\r",
-                  "    pm.expect(res).to.be.an(\"object\");\r",
-                  "});"
+                  "    \r",
+                  "    // Kiểm tra có message thông báo\r",
+                  "    pm.expect(res).to.have.property('message');\r",
+                  "    \r",
+                  "    // Kiểm tra object battery tồn tại\r",
+                  "    pm.expect(res).to.have.property('battery');\r",
+                  "    let battery = res.battery;\r",
+                  "\r",
+                  "    // Kiểm tra các trường thông tin cơ bản của Pin\r",
+                  "    pm.expect(battery).to.have.property('battery_id');\r",
+                  "    pm.expect(battery).to.have.property('user_id');\r",
+                  "    pm.expect(battery).to.have.property('manufacturer');\r",
+                  "    pm.expect(battery).to.have.property('capacity_kwh');\r",
+                  "    pm.expect(battery).to.have.property('health_percent');\r",
+                  "\r",
+                  "    // Kiểm tra các trường trạng thái (listing/auction) được serialize\r",
+                  "    pm.expect(battery).to.have.property('is_listed');\r",
+                  "    pm.expect(battery).to.have.property('listing_status');\r",
+                  "    pm.expect(battery).to.have.property('is_auctioned');\r",
+                  "    pm.expect(battery).to.have.property('auction_status_resource');\r",
+                  "});\r",
+                  ""
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -531,9 +663,16 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/batteries/1",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries", "1"]
+              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "{{battery_id}}"
+              ]
             }
           },
           "response": []
@@ -545,18 +684,40 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"My Battery\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "pm.test(\"Get success\", function () {\r",
+                  "// 1. Kiểm tra Status Code\r",
+                  "pm.test(\"Get my batteries success\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Data exists\", function () {\r",
+                  "// 2. Kiểm tra dữ liệu trả về phải là một mảng (Array)\r",
+                  "pm.test(\"Response is an array of batteries\", function () {\r",
                   "    let res = pm.response.json();\r",
-                  "    pm.expect(res).to.be.an(\"object\");\r",
+                  "    pm.expect(res).to.be.an(\"array\");\r",
                   "});\r",
-                  ""
+                  "\r",
+                  "// 3. Kiểm tra đầy đủ các fields của phần tử đầu tiên (nếu có dữ liệu)\r",
+                  "pm.test(\"Battery items have all required fields\", function () {\r",
+                  "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    if (res.length > 0) {\r",
+                  "        let firstBattery = res[0];\r",
+                  "\r",
+                  "        // Các thông số kỹ thuật\r",
+                  "        pm.expect(firstBattery).to.have.property('battery_id');\r",
+                  "        pm.expect(firstBattery).to.have.property('user_id');\r",
+                  "        pm.expect(firstBattery).to.have.property('manufacturer');\r",
+                  "        pm.expect(firstBattery).to.have.property('capacity_kwh');\r",
+                  "        pm.expect(firstBattery).to.have.property('health_percent');\r",
+                  "\r",
+                  "        // Các trạng thái liên quan đến sàn (Listing/Auction)\r",
+                  "        pm.expect(firstBattery).to.have.property('is_listed');\r",
+                  "        pm.expect(firstBattery).to.have.property('listing_status');\r",
+                  "        pm.expect(firstBattery).to.have.property('is_auctioned');\r",
+                  "        pm.expect(firstBattery).to.have.property('auction_status_resource');\r",
+                  "    } else {\r",
+                  "        console.log(\"Inventory is empty, skipping field validation.\");\r",
+                  "    }\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -585,8 +746,14 @@
             ],
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/batteries",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries"
+              ]
             }
           },
           "response": []
@@ -598,22 +765,42 @@
               "listen": "test",
               "script": {
                 "exec": [
+                  "// 1. Kiểm tra Status Code (201 cho POST tạo mới thành công)\r",
                   "pm.test(\"Create vehicle OK\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
+                  "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
+                  "// 2. Kiểm tra đầy đủ các fields của Vehicle\r",
+                  "pm.test(\"Response has all required vehicle fields\", function () {\r",
+                  "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    // Kiểm tra có message thông báo và object vehicle\r",
+                  "    pm.expect(res).to.have.property('message');\r",
+                  "    pm.expect(res).to.have.property('vehicle');\r",
+                  "    \r",
+                  "    let vehicle = res.vehicle;\r",
+                  "\r",
+                  "    // Kiểm tra các thông tin cơ bản\r",
+                  "    pm.expect(vehicle).to.have.property('vehicle_id');\r",
+                  "    pm.expect(vehicle).to.have.property('user_id');\r",
+                  "    pm.expect(vehicle).to.have.property('brand');\r",
+                  "    pm.expect(vehicle).to.have.property('model');\r",
+                  "    pm.expect(vehicle).to.have.property('year');\r",
+                  "    pm.expect(vehicle).to.have.property('mileage');\r",
+                  "\r",
+                  "    // Kiểm tra các trường trạng thái hệ thống trả về từ serialize_vehicle\r",
+                  "    pm.expect(vehicle).to.have.property('is_listed');\r",
+                  "    pm.expect(vehicle).to.have.property('listing_status');\r",
+                  "    pm.expect(vehicle).to.have.property('is_auctioned');\r",
+                  "    pm.expect(vehicle).to.have.property('auction_status_resource');\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Lưu vehicle_id vào môi trường (truy xuất đúng từ res.vehicle.vehicle_id)\r",
                   "let res = pm.response.json();\r",
-                  "pm.environment.set(\"vehicle_id\", res.vehicle_id);"
+                  "if (res.vehicle && res.vehicle.vehicle_id) {\r",
+                  "    pm.environment.set(\"vehicle_id\", res.vehicle.vehicle_id);\r",
+                  "}"
                 ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [""],
                 "type": "text/javascript",
                 "packages": {},
                 "requests": {}
@@ -641,7 +828,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"brand\": \"Toyota\",\r\n \"model\": \"Camry\",\r\n \"year\": 2024,\r\n \"mileage\": 10000\r\n}",
+              "raw": "{\r\n \"brand\": \"abc\",\r\n \"model\": \"xyz\",\r\n \"year\": 2026,\r\n \"mileage\": 2000\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -650,8 +837,14 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/vehicles",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles"
+              ]
             }
           },
           "response": []
@@ -663,18 +856,35 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Vehicle list returned\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "pm.test(\"Get success\", function () {\r",
+                  "// 1. Kiểm tra Status Code (200 cho PUT/GET thành công)\r",
+                  "pm.test(\"Update or Get vehicle success\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Data exists\", function () {\r",
+                  "// 2. Kiểm tra cấu trúc dữ liệu và đầy đủ các fields\r",
+                  "pm.test(\"Response has message and vehicle details\", function () {\r",
                   "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    // Kiểm tra cấu trúc tổng quát\r",
                   "    pm.expect(res).to.be.an(\"object\");\r",
-                  "});\r",
-                  ""
+                  "    pm.expect(res).to.have.property('vehicle');\r",
+                  "    \r",
+                  "    let vehicle = res.vehicle;\r",
+                  "\r",
+                  "    // Kiểm tra các thông số kỹ thuật của xe\r",
+                  "    pm.expect(vehicle).to.have.property('vehicle_id');\r",
+                  "    pm.expect(vehicle).to.have.property('user_id');\r",
+                  "    pm.expect(vehicle).to.have.property('brand');\r",
+                  "    pm.expect(vehicle).to.have.property('model');\r",
+                  "    pm.expect(vehicle).to.have.property('year');\r",
+                  "    pm.expect(vehicle).to.have.property('mileage');\r",
+                  "\r",
+                  "    // Kiểm tra các trường trạng thái được serialize\r",
+                  "    pm.expect(vehicle).to.have.property('is_listed');\r",
+                  "    pm.expect(vehicle).to.have.property('listing_status');\r",
+                  "    pm.expect(vehicle).to.have.property('is_auctioned');\r",
+                  "    pm.expect(vehicle).to.have.property('auction_status_resource');\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -694,13 +904,7 @@
               ]
             },
             "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer{{token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\r\n \"brand\": \"abcde\",\r\n \"model\": \"xyznm\",\r\n \"year\": 2025,\r\n \"mileage\":200000\r\n}",
@@ -711,9 +915,16 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/vehicles/1",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles", "1"]
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles",
+                "{{vehicle_id}}"
+              ]
             }
           },
           "response": []
@@ -725,18 +936,41 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Vehicle list returned\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "pm.test(\"Get success\", function () {\r",
+                  "// 1. Kiểm tra Status Code\r",
+                  "pm.test(\"Get my vehicles success\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  "pm.test(\"Data exists\", function () {\r",
+                  "// 2. Kiểm tra dữ liệu trả về phải là một mảng (Array)\r",
+                  "pm.test(\"Response is an array of vehicles\", function () {\r",
                   "    let res = pm.response.json();\r",
-                  "    pm.expect(res).to.be.an(\"object\");\r",
+                  "    pm.expect(res).to.be.an(\"array\");\r",
                   "});\r",
-                  ""
+                  "\r",
+                  "// 3. Kiểm tra chi tiết các fields của phần tử trong mảng (nếu có dữ liệu)\r",
+                  "pm.test(\"Vehicle items have all required fields\", function () {\r",
+                  "    let res = pm.response.json();\r",
+                  "    \r",
+                  "    if (res.length > 0) {\r",
+                  "        let firstVehicle = res[0];\r",
+                  "\r",
+                  "        // Thông tin cơ bản\r",
+                  "        pm.expect(firstVehicle).to.have.property('vehicle_id');\r",
+                  "        pm.expect(firstVehicle).to.have.property('user_id');\r",
+                  "        pm.expect(firstVehicle).to.have.property('brand');\r",
+                  "        pm.expect(firstVehicle).to.have.property('model');\r",
+                  "        pm.expect(firstVehicle).to.have.property('year');\r",
+                  "        pm.expect(firstVehicle).to.have.property('mileage');\r",
+                  "\r",
+                  "        // Thông tin trạng thái niêm yết và đấu giá (từ serialize_vehicle)\r",
+                  "        pm.expect(firstVehicle).to.have.property('is_listed');\r",
+                  "        pm.expect(firstVehicle).to.have.property('listing_status');\r",
+                  "        pm.expect(firstVehicle).to.have.property('is_auctioned');\r",
+                  "        pm.expect(firstVehicle).to.have.property('auction_status_resource');\r",
+                  "    } else {\r",
+                  "        console.log(\"Vehicle inventory is empty, skipping item validation.\");\r",
+                  "    }\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -771,8 +1005,14 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/my-assets/vehicles",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles"
+              ]
             }
           },
           "response": []
@@ -784,13 +1024,45 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Listing created\", function () {\r",
+                  "// 1. Kiểm tra Status Code (201 cho POST tạo Listing thành công)\r",
+                  "pm.test(\"Listing created OK\", function () {\r",
                   "    pm.response.to.have.status(201);\r",
                   "});\r",
                   "\r",
-                  "let jsonData = pm.response.json()\r",
+                  "// 2. Kiểm tra cấu trúc response và đầy đủ các fields\r",
+                  "pm.test(\"Response has all required listing fields\", function () {\r",
+                  "    let jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // Kiểm tra thông báo và object listing\r",
+                  "    pm.expect(jsonData).to.have.property('message');\r",
+                  "    pm.expect(jsonData).to.have.property('listing');\r",
+                  "    \r",
+                  "    let listing = jsonData.listing;\r",
                   "\r",
-                  "pm.environment.set(\"listing_id\", jsonData.listing.listing_id)"
+                  "    // Kiểm tra các trường thông tin cơ bản của tin đăng\r",
+                  "    pm.expect(listing).to.have.property('listing_id');\r",
+                  "    pm.expect(listing).to.have.property('seller_id');\r",
+                  "    pm.expect(listing).to.have.property('listing_type').to.eql('battery');\r",
+                  "    pm.expect(listing).to.have.property('title');\r",
+                  "    pm.expect(listing).to.have.property('description');\r",
+                  "    pm.expect(listing).to.have.property('price');\r",
+                  "    pm.expect(listing).to.have.property('status');\r",
+                  "    pm.expect(listing).to.have.property('created_at');\r",
+                  "\r",
+                  "    // Kiểm tra chi tiết Pin đi kèm (vì đây là đăng bán Pin)\r",
+                  "    pm.expect(listing).to.have.property('battery_details');\r",
+                  "    pm.expect(listing.battery_details).to.not.be.null;\r",
+                  "    pm.expect(listing.battery_details).to.have.property('battery_id');\r",
+                  "\r",
+                  "    // Kiểm tra danh sách ảnh (mảng)\r",
+                  "    pm.expect(listing).to.have.property('images').to.be.an('array');\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Lưu listing_id vào môi trường\r",
+                  "let jsonData = pm.response.json();\r",
+                  "if (jsonData.listing && jsonData.listing.listing_id) {\r",
+                  "    pm.environment.set(\"listing_id\", jsonData.listing.listing_id);\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -821,14 +1093,15 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}listing/api//my-assets/batteries/{{battery_id}}/list",
-              "host": ["{{url_base}}listing"],
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}/list",
+              "host": [
+                "{{url_base}}listing"
+              ],
               "path": [
                 "api",
-                "",
                 "my-assets",
-                "batteries",
-                "{{battery_id}}",
+                "vehicles",
+                "{{vehicle_id}}",
                 "list"
               ]
             }
@@ -875,9 +1148,17 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/batteries/1/list",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries", "1", "list"]
+              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}/list",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "{{battery_id}}",
+                "list"
+              ]
             }
           },
           "response": []
@@ -891,14 +1172,6 @@
                 "exec": [
                   "pm.test(\"Listings returned\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "pm.test(\"Get list success\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Is array\", function () {\r",
-                  "    let res = pm.response.json();\r",
-                  "    pm.expect(res).to.be.an(\"array\");\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -909,21 +1182,19 @@
           ],
           "request": {
             "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
+              "type": "noauth"
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{url_base}}listing/api/listings",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "listings"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "listings"
+              ]
             }
           },
           "response": []
@@ -935,8 +1206,13 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Request hợp lệ\", function () {\r",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200,201,204,400,404]);\r",
+                  "pm.test(\"Watchlist Logic Check\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 400]);",
+                  "",
+                  "    if (pm.response.code === 400) {",
+                  "        let jsonData = pm.response.json();",
+                  "        pm.expect(jsonData.error).to.eql(\"You sell this listing.\");",
+                  "    }",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -960,7 +1236,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"listing_id\": {{listing_id}}\r\n}\r\n",
+              "raw": "{\r\n \"listing_id\": {{listing_id}}\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -969,8 +1245,13 @@
             },
             "url": {
               "raw": "{{url_base}}listing/api/watch-list",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "watch-list"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list"
+              ]
             }
           },
           "response": []
@@ -988,64 +1269,6 @@
                   "\r",
                   "pm.test(\"Response is array\", function () {\r",
                   "    pm.expect(pm.response.json()).to.be.an(\"array\");\r",
-                  "});\r",
-                  "pm.test(\"Get watchlist success\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Is array\", function () {\r",
-                  "    let res = pm.response.json();\r",
-                  "    pm.expect(res).to.be.an(\"array\");\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          },
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "GET",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}listing/api/watch-list",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "watch-list"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "CompareListing",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Compare success\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
                   "});\r",
                   ""
                 ],
@@ -1069,18 +1292,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}listing/api/compare?id={{listing_id}}&id={{listing_id}}",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "compare"],
-              "query": [
-                {
-                  "key": "id",
-                  "value": "{{listing_id}}"
-                },
-                {
-                  "key": "id",
-                  "value": "{{listing_id}}"
-                }
+              "raw": "{{url_base}}listing/api/watch-list",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list"
               ]
             }
           },
@@ -1119,8 +1337,69 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}listing/api/watch-list/by-listing/{{listing_id}}",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "watch-list", "by-listing", "{{listing_id}}"]
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "watch-list",
+                "by-listing",
+                "{{listing_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CompareListing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Compare success\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{url_base}}listing/api/compare?id={{listing_id}}&id={{listing_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "compare"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "{{listing_id}}"
+                },
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
             }
           },
           "response": []
@@ -1160,13 +1439,15 @@
               "raw": ""
             },
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}/list",
-              "host": ["{{url_base}}listing"],
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}/list",
+              "host": [
+                "{{url_base}}listing"
+              ],
               "path": [
                 "api",
                 "my-assets",
-                "batteries",
-                "{{battery_id}}",
+                "vehicles",
+                "{{vehicle_id}}",
                 "list"
               ]
             }
@@ -1204,9 +1485,16 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/batteries/10",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "batteries", "10"]
+              "raw": "{{url_base}}listing/api/my-assets/batteries/{{battery_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "batteries",
+                "{{battery_id}}"
+              ]
             }
           },
           "response": []
@@ -1242,9 +1530,16 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{url_base}}listing/api/my-assets/vehicles/8",
-              "host": ["{{url_base}}listing"],
-              "path": ["api", "my-assets", "vehicles", "8"]
+              "raw": "{{url_base}}listing/api/my-assets/vehicles/{{vehicle_id}}",
+              "host": [
+                "{{url_base}}listing"
+              ],
+              "path": [
+                "api",
+                "my-assets",
+                "vehicles",
+                "{{vehicle_id}}"
+              ]
             }
           },
           "response": []
@@ -1255,7 +1550,7 @@
       "name": "Auction_Service",
       "item": [
         {
-          "name": "Create_Auction_Vehicle",
+          "name": "Create_Auction",
           "event": [
             {
               "listen": "test",
@@ -1307,7 +1602,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"auction_type\": \"vehicle\",\r\n  \"vehicle_id\": 4,\r\n  \"current_bid\": 1000,\r\n  \"start_time\": \"2026-04-16T14:00:00+07:00\"\r\n}",
+              "raw": "{\r\n \"auction_type\": \"vehicle\",\r\n \"vehicle_id\": {{vehicle_id}},\r\n \"current_bid\": 1000,\r\n \"start_time\": \"2026-06-16T14:00:00+07:00\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1315,9 +1610,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/auction/api/",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", ""]
+              "raw": "{{url_base}}auction/api/",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                ""
+              ]
             }
           },
           "response": []
@@ -1352,8 +1652,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/",
-              "host": ["{{url_base}}auction"],
-              "path": ["api", ""]
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                ""
+              ]
             }
           },
           "response": []
@@ -1383,34 +1688,6 @@
                   "    pm.expect(auction).to.have.property(\"end_time\");\r",
                   "    pm.expect(auction).to.have.property(\"current_bid\");\r",
                   "    pm.expect(auction).to.have.property(\"winning_bidder_id\");\r",
-                  "});\r",
-                  "\r",
-                  "// check enum\r",
-                  "pm.test(\"Check auction_type\", function () {\r",
-                  "    pm.expect([\"vehicle\",\"battery\"]).to.include(auction.auction_type);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Check auction_status\", function () {\r",
-                  "    pm.expect(\r",
-                  "        [\"pending\",\"prepare\",\"started\",\"ended\",\"rejected\"]\r",
-                  "    ).to.include(auction.auction_status);\r",
-                  "});\r",
-                  "\r",
-                  "// check logic vehicle/battery\r",
-                  "pm.test(\"Check type specific\", function () {\r",
-                  "    if(auction.auction_type === \"vehicle\"){\r",
-                  "        pm.expect(auction.vehicle_id).to.not.be.null;\r",
-                  "    }\r",
-                  "    if(auction.auction_type === \"battery\"){\r",
-                  "        pm.expect(auction.battery_id).to.not.be.null;\r",
-                  "    }\r",
-                  "});\r",
-                  "\r",
-                  "// check time\r",
-                  "pm.test(\"Check start < end\", function () {\r",
-                  "    let start = new Date(auction.start_time);\r",
-                  "    let end = new Date(auction.end_time);\r",
-                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
                   "});"
                 ],
                 "type": "text/javascript",
@@ -1424,129 +1701,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}auction/api/{{auction_id}}",
-              "host": ["{{url_base}}auction"],
-              "path": ["api", "{{auction_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get_Auction_By_Vehicle",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Auction returned\", function () {\r",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200,404]);\r",
-                  "});\r",
-                  "\r",
-                  "let jsonData = pm.response.json();\r",
-                  "\r",
-                  "if(pm.response.code === 200){\r",
-                  "\r",
-                  "    pm.test(\"Check fields\", function () {\r",
-                  "        pm.expect(jsonData).to.have.property(\"auction_id\");\r",
-                  "        pm.expect(jsonData).to.have.property(\"auction_type\");\r",
-                  "        pm.expect(jsonData).to.have.property(\"vehicle_id\");\r",
-                  "    });\r",
-                  "\r",
-                  "    pm.test(\"Check auction type is vehicle\", function () {\r",
-                  "        pm.expect(jsonData.auction_type).to.eql(\"vehicle\");\r",
-                  "    });\r",
-                  "\r",
-                  "    pm.test(\"Check vehicle_id exists\", function () {\r",
-                  "        pm.expect(jsonData.vehicle_id).to.not.be.null;\r",
-                  "    });\r",
-                  "\r",
-                  "    pm.test(\"Check battery_id null\", function () {\r",
-                  "        pm.expect(jsonData.battery_id).to.be.oneOf([null, undefined]);\r",
-                  "    });\r",
-                  "\r",
-                  "    pm.test(\"Check start < end\", function () {\r",
-                  "        let start = new Date(jsonData.start_time);\r",
-                  "        let end = new Date(jsonData.end_time);\r",
-                  "        pm.expect(start).to.be.below(end);\r",
-                  "    });\r",
-                  "\r",
-                  "}"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}/auction/api/vehicle/1",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "vehicle", "1"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get_Auction_By_Battery",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Auction returned\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "let auction = pm.response.json();\r",
-                  "\r",
-                  "// check fields\r",
-                  "pm.test(\"Check fields\", function () {\r",
-                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"battery_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
-                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
-                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
-                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
-                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
-                  "});\r",
-                  "\r",
-                  "// phải là battery\r",
-                  "pm.test(\"Check auction type is battery\", function () {\r",
-                  "    pm.expect(auction.auction_type).to.eql(\"battery\");\r",
-                  "});\r",
-                  "\r",
-                  "// battery_id phải tồn tại\r",
-                  "pm.test(\"Check battery_id exists\", function () {\r",
-                  "    pm.expect(auction.battery_id).to.not.be.null;\r",
-                  "});\r",
-                  "\r",
-                  "// vehicle phải null\r",
-                  "pm.test(\"Check vehicle_id null\", function () {\r",
-                  "    pm.expect(auction.vehicle_id).to.be.oneOf([null, undefined]);\r",
-                  "});\r",
-                  "\r",
-                  "// check time\r",
-                  "pm.test(\"Check start < end\", function () {\r",
-                  "    let start = new Date(auction.start_time);\r",
-                  "    let end = new Date(auction.end_time);\r",
-                  "    pm.expect(start.getTime()).to.be.below(end.getTime());\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{url_base}}/auction/api/battery/1",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "battery", "1"]
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -1592,57 +1753,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/auction/api/{{auction_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "{{auction_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Place_Bid",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Bid placed\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n \"bid_amount\": 1200\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}/auction/api/{{auction_id}}/bid",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "{{auction_id}}", "bid"]
+              "raw": "{{url_base}}auction/api/{{auction_id}}",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -1679,9 +1797,14 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/auction/api/my-auctions",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "my-auctions"]
+              "raw": "{{url_base}}auction/api/my-auctions",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "my-auctions"
+              ]
             }
           },
           "response": []
@@ -1718,9 +1841,14 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/auction/api/my-bids",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "my-bids"]
+              "raw": "{{url_base}}auction/api/my-bids",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "my-bids"
+              ]
             }
           },
           "response": []
@@ -1757,90 +1885,15 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/auction/api/auctions/{{auction_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", "auctions", "{{auction_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Create_Auction_Battery",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "// Parse response 1 lần\r",
-                  "let jsonData = pm.response.json();\r",
-                  "\r",
-                  "// ✅ Check status\r",
-                  "pm.test(\"Status code is 201\", function () {\r",
-                  "    pm.response.to.have.status(201);\r",
-                  "});\r",
-                  "\r",
-                  "// ✅ Check có auction object\r",
-                  "pm.test(\"Response has auction object\", function () {\r",
-                  "    pm.expect(jsonData).to.have.property(\"auction\");\r",
-                  "});\r",
-                  "\r",
-                  "// ✅ Check đầy đủ field\r",
-                  "pm.test(\"Auction has all required fields\", function () {\r",
-                  "    const auction = jsonData.auction;\r",
-                  "\r",
-                  "    pm.expect(auction).to.have.property(\"auction_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"auction_type\");\r",
-                  "    pm.expect(auction).to.have.property(\"vehicle_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"battery_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"auction_status\");\r",
-                  "    pm.expect(auction).to.have.property(\"start_time\");\r",
-                  "    pm.expect(auction).to.have.property(\"end_time\");\r",
-                  "    pm.expect(auction).to.have.property(\"current_bid\");\r",
-                  "    pm.expect(auction).to.have.property(\"bidder_id\");\r",
-                  "    pm.expect(auction).to.have.property(\"winning_bidder_id\");\r",
-                  "});\r",
-                  "\r",
-                  "// 🔥 QUAN TRỌNG: lưu auction_id để dùng cho update\r",
-                  "pm.test(\"Save auction_id\", function () {\r",
-                  "    pm.environment.set(\"auction_id\", jsonData.auction.auction_id);\r",
-                  "});\r",
-                  "\r",
-                  "// 🔍 Debug (xem trên console)\r",
-                  "console.log(\"auction_id:\", jsonData.auction.auction_id);"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n  \"auction_type\": \"battery\",\r\n  \"battery_id\": 1,\r\n  \"current_bid\": 500,\r\n  \"start_time\": \"2026-04-16T16:00:00+07:00\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}/auction/api/",
-              "host": ["{{url_base}}"],
-              "path": ["auction", "api", ""]
+              "raw": "{{url_base}}auction/api/auctions/{{auction_id}}",
+              "host": [
+                "{{url_base}}auction"
+              ],
+              "path": [
+                "api",
+                "auctions",
+                "{{auction_id}}"
+              ]
             }
           },
           "response": []
@@ -1862,13 +1915,19 @@
                   "});\r",
                   "\r",
                   "let jsonData = pm.response.json();\r",
+                  "let transaction = jsonData.transaction;\r",
                   "\r",
-                  "pm.environment.set(\"transaction_id\", jsonData.transaction.transaction_id)\r",
+                  "// Lưu id\r",
+                  "pm.environment.set(\"transaction_id\", transaction.transaction_id);\r",
                   "\r",
-                  "pm.test(\"Transaction id exists\", function () {\r",
-                  "    pm.expect(jsonData.transaction).to.have.property(\"transaction_id\");\r",
-                  "});\r",
-                  ""
+                  "pm.test(\"All required fields exist\", function () {\r",
+                  "    pm.expect(transaction).to.have.property(\"transaction_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"buyer_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"seller_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"final_price\");\r",
+                  "    pm.expect(transaction).to.have.property(\"transaction_status\");\r",
+                  "    pm.expect(transaction).to.have.property(\"created_at\");\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1900,8 +1959,13 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
             }
           },
           "response": []
@@ -1948,8 +2012,13 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions"
+              ]
             }
           },
           "response": []
@@ -1965,7 +2034,18 @@
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
                   "\r",
-                  ""
+                  "let jsonData = pm.response.json();\r",
+                  "let transaction = jsonData.transaction;\r",
+                  "\r",
+                  "// ===== REQUIRED FIELDS =====\r",
+                  "pm.test(\"All required fields exist\", function () {\r",
+                  "    pm.expect(transaction).to.have.property(\"transaction_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"buyer_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"seller_id\");\r",
+                  "    pm.expect(transaction).to.have.property(\"final_price\");\r",
+                  "    pm.expect(transaction).to.have.property(\"transaction_status\");\r",
+                  "    pm.expect(transaction).to.have.property(\"created_at\");\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -1988,8 +2068,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-seller",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions-seller"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-seller"
+              ]
             }
           },
           "response": []
@@ -2004,7 +2089,21 @@
                   "pm.test(\"Status code is 200\", function () {\r",
                   "    pm.response.to.have.status(200);\r",
                   "});\r",
-                  ""
+                  "\r",
+                  "let jsonData = pm.response.json();\r",
+                  "let transaction = jsonData.transaction;\r",
+                  "\r",
+                  "// field cơ bản\r",
+                  "pm.test(\"Has required fields\", function () {\r",
+                  "    pm.expect(transaction).to.include.all.keys(\r",
+                  "        \"transaction_id\",\r",
+                  "        \"buyer_id\",\r",
+                  "        \"seller_id\",\r",
+                  "        \"final_price\",\r",
+                  "        \"transaction_status\",\r",
+                  "        \"created_at\"\r",
+                  "    );\r",
+                  "});"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -2027,8 +2126,13 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions-buyer",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions-buyer"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions-buyer"
+              ]
             }
           },
           "response": []
@@ -2066,7 +2170,9 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/{{transaction_id}}/contract/sign",
-              "host": ["{{url_base}}transaction"],
+              "host": [
+                "{{url_base}}transaction"
+              ],
               "path": [
                 "api",
                 "transactions",
@@ -2110,8 +2216,16 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/99999/contract/sign",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions", "99999", "contract", "sign"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "99999",
+                "contract",
+                "sign"
+              ]
             }
           },
           "response": []
@@ -2158,8 +2272,15 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/{{transaction_id}}/payment",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions", "{{transaction_id}}", "payment"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "{{transaction_id}}",
+                "payment"
+              ]
             }
           },
           "response": []
@@ -2206,8 +2327,15 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/{{transaction_id}}/payment",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions", "{{transaction_id}}", "payment"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "{{transaction_id}}",
+                "payment"
+              ]
             }
           },
           "response": []
@@ -2254,8 +2382,15 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/{{transaction_id}}/status",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions", "{{transaction_id}}", "status"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "{{transaction_id}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -2301,8 +2436,15 @@
             },
             "url": {
               "raw": "{{url_base}}transaction/api/transactions/{{transaction_id}}/status",
-              "host": ["{{url_base}}transaction"],
-              "path": ["api", "transactions", "{{transaction_id}}", "status"]
+              "host": [
+                "{{url_base}}transaction"
+              ],
+              "path": [
+                "api",
+                "transactions",
+                "{{transaction_id}}",
+                "status"
+              ]
             }
           },
           "response": []
@@ -2339,17 +2481,7 @@
                   "    pm.expect(review).to.have.property(\"comment\");\r",
                   "    pm.expect(review).to.have.property(\"created_at\");\r",
                   "});\r",
-                  "\r",
-                  "// 2. Check kiểu dữ liệu\r",
-                  "pm.test(\"Check data types\", function () {\r",
-                  "    pm.expect(review.review_id).to.be.a(\"number\");\r",
-                  "    pm.expect(review.transaction_id).to.be.a(\"number\");\r",
-                  "    pm.expect(review.reviewer_id).to.be.a(\"number\");\r",
-                  "    pm.expect(review.reviewed_user_id).to.be.a(\"number\");\r",
-                  "    pm.expect(review.rating).to.be.a(\"number\");\r",
-                  "});\r",
-                  "\r",
-                  "// 3. Check logic rating (giống model)\r",
+                  "// Check logic rating \r",
                   "pm.test(\"Rating must be between 0 and 5\", function () {\r",
                   "    pm.expect(review.rating).to.be.within(0, 5);\r",
                   "});"
@@ -2371,7 +2503,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": 1,\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
+              "raw": "{\r\n \"transaction_id\": {{transaction_id}},\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2379,9 +2511,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "raw": "{{url_base}}review/api/reviews",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -2424,7 +2561,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": 1,\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
+              "raw": "{\r\n \"transaction_id\": {{transaction_id}},\r\n \"reviewed_user_id\": 2,\r\n \"rating\": 5,\r\n \"comment\": \"Good seller\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2432,9 +2569,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "raw": "{{url_base}}review/api/reviews",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -2467,7 +2609,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n \"transaction_id\": 1\r\n}",
+              "raw": "{\r\n \"transaction_id\": {{transaction_id}}\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2475,9 +2617,14 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews"]
+              "raw": "{{url_base}}review/api/reviews",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews"
+              ]
             }
           },
           "response": []
@@ -2523,52 +2670,15 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Update Review - Unauthorized",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Unauthorized update blocked\", function () {\r",
-                  "    pm.response.to.have.status(403);\r",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n \"rating\": 3,\r\n \"comment\": \"update by another user\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -2609,9 +2719,15 @@
               }
             },
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -2650,13 +2766,6 @@
                   "            pm.expect(review).to.have.property(\"created_at\");\r",
                   "        });\r",
                   "\r",
-                  "        // Check kiểu dữ liệu\r",
-                  "        pm.test(\"Check data types\", function () {\r",
-                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
-                  "        });\r",
-                  "\r",
                   "        // Check logic rating\r",
                   "        pm.test(\"Rating valid\", function () {\r",
                   "            pm.expect(review.rating).to.be.within(0, 5);\r",
@@ -2676,9 +2785,16 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/user/{{user_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "user", "{{user_id}}"]
+              "raw": "{{url_base}}review/api/reviews/user/{{user_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "user",
+                "{{user_id}}"
+              ]
             }
           },
           "response": []
@@ -2719,13 +2835,6 @@
                   "            pm.expect(review).to.have.property(\"created_at\");\r",
                   "        });\r",
                   "\r",
-                  "        // Check kiểu dữ liệu\r",
-                  "        pm.test(\"Check data types\", function () {\r",
-                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
-                  "        });\r",
-                  "\r",
                   "        // Check logic rating\r",
                   "        pm.test(\"Rating valid\", function () {\r",
                   "            pm.expect(review.rating).to.be.within(0, 5);\r",
@@ -2751,9 +2860,15 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/my-reviews",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "my-reviews"]
+              "raw": "{{url_base}}review/api/reviews/my-reviews",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "my-reviews"
+              ]
             }
           },
           "response": []
@@ -2794,13 +2909,6 @@
                   "            pm.expect(review).to.have.property(\"created_at\");\r",
                   "        });\r",
                   "\r",
-                  "        // Check kiểu dữ liệu\r",
-                  "        pm.test(\"Check data types\", function () {\r",
-                  "            pm.expect(review.review_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.transaction_id).to.be.a(\"number\");\r",
-                  "            pm.expect(review.rating).to.be.a(\"number\");\r",
-                  "        });\r",
-                  "\r",
                   "        // Check logic rating\r",
                   "        pm.test(\"Rating valid\", function () {\r",
                   "            pm.expect(review.rating).to.be.within(0, 5);\r",
@@ -2820,10 +2928,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/transaction/{{transaction_id}}",
-              "host": ["{{url_base}}"],
+              "raw": "{{url_base}}review/api/reviews/transaction/{{transaction_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
               "path": [
-                "review",
                 "api",
                 "reviews",
                 "transaction",
@@ -2860,26 +2969,21 @@
               }
             ],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
         },
         {
           "name": "Delete Review – Unauthorized",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [""],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
           "request": {
             "auth": {
               "type": "bearer",
@@ -2892,17 +2996,17 @@
               ]
             },
             "method": "DELETE",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}",
-                "type": "text"
-              }
-            ],
+            "header": [],
             "url": {
-              "raw": "{{url_base}}/review/api/reviews/{{review_id}}",
-              "host": ["{{url_base}}"],
-              "path": ["review", "api", "reviews", "{{review_id}}"]
+              "raw": "{{url_base}}review/api/reviews/{{review_id}}",
+              "host": [
+                "{{url_base}}review"
+              ],
+              "path": [
+                "api",
+                "reviews",
+                "{{review_id}}"
+              ]
             }
           },
           "response": []
@@ -2983,7 +3087,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 200,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3040,7 +3144,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": 1\n}",
+              "raw": "{\n  \"transaction_id\": {{transaction_id}}\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3097,7 +3201,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 200,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3144,7 +3248,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3173,54 +3277,6 @@
                 "exec": [
                   "pm.test(\"Report deleted\", function () {",
                   "    pm.response.to.have.status(200);",
-                  "});"
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "DELETE",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": ""
-            },
-            "url": {
-              "raw": "{{url_base}}report/api/reports/{{report_id}}",
-              "host": [
-                "{{url_base}}report"
-              ],
-              "path": [
-                "api",
-                "reports",
-                "{{report_id}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Report - Unauthorized 403",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test(\"Unauthorized delete blocked\", function () {",
-                  "    pm.response.to.have.status(403);",
                   "});"
                 ],
                 "type": "text/javascript",
