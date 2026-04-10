@@ -2925,8 +2925,35 @@
                   "",
                   "let jsonData = pm.response.json();",
                   "",
-                  "pm.test(\"report created\", function () {",
+                  "// --- Kiểm tra structure response ---",
+                  "pm.test(\"Response has report object\", function () {",
+                  "    pm.expect(jsonData).to.have.property(\"report\");",
+                  "});",
+                  "",
+                  "// --- Kiểm tra các field quan trọng ---",
+                  "pm.test(\"Report contains required fields\", function () {",
                   "    pm.expect(jsonData.report).to.have.property(\"report_id\");",
+                  "    pm.expect(jsonData.report).to.have.property(\"reporter_id\");",
+                  "    pm.expect(jsonData.report).to.have.property(\"transaction_id\");",
+                  "    pm.expect(jsonData.report).to.have.property(\"reported_user_id\");",
+                  "    pm.expect(jsonData.report).to.have.property(\"reason\");",
+                  "    pm.expect(jsonData.report).to.have.property(\"status\");",
+                  "});",
+                  "",
+                  "// --- Kiểm tra giá trị logic ---",
+                  "pm.test(\"Report status should be pending\", function () {",
+                  "    pm.expect(jsonData.report.status).to.eql(\"pending\");",
+                  "});",
+                  "",
+                  "// --- Kiểm tra reason hợp lệ ---",
+                  "const allowedReasons = ['fraud', 'misleading', 'communication', 'item_issue', 'other'];",
+                  "",
+                  "pm.test(\"Reason is valid\", function () {",
+                  "    pm.expect(allowedReasons).to.include(jsonData.report.reason);",
+                  "});",
+                  "",
+                  "// --- Lưu report_id để dùng cho test sau ---",
+                  "pm.test(\"Save report_id\", function () {",
                   "    pm.environment.set(\"report_id\", jsonData.report.report_id);",
                   "});"
                 ],
@@ -2956,7 +2983,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 200,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2965,8 +2992,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -3008,7 +3040,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": {{transaction_id}}\n}",
+              "raw": "{\n  \"transaction_id\": 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3017,8 +3049,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -3060,7 +3097,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 200,\n  \"reason\": \"fraud\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3069,8 +3106,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -3102,7 +3144,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"transaction_id\": {{transaction_id}},\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
+              "raw": "{\n  \"transaction_id\": 1,\n  \"reported_user_id\": 2,\n  \"reason\": \"Scam\",\n  \"details\": \"Seller did not deliver the product\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -3111,8 +3153,13 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports"
+              ]
             }
           },
           "response": []
@@ -3153,8 +3200,62 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports/{{report_id}}",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "{{report_id}}"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "{{report_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Report - Unauthorized 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Unauthorized delete blocked\", function () {",
+                  "    pm.response.to.have.status(403);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{url_base}}report/api/reports/{{report_id}}",
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "{{report_id}}"
+              ]
             }
           },
           "response": []
@@ -3195,8 +3296,14 @@
             },
             "url": {
               "raw": "{{url_base}}report/api/reports/99999",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "99999"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "99999"
+              ]
             }
           },
           "response": []
@@ -3208,13 +3315,50 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Get reports by transaction success\", function () {",
+                  "pm.test(\"Status code is 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
                   "",
-                  "pm.test(\"Response is array\", function () {",
-                  "    pm.expect(pm.response.json()).to.be.an(\"array\");",
-                  "});"
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "// --- Kiểm tra kiểu dữ liệu ---",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// --- Nếu có dữ liệu thì validate structure ---",
+                  "if (jsonData.length > 0) {",
+                  "",
+                  "    pm.test(\"Each report has required fields\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report).to.have.property(\"report_id\");",
+                  "            pm.expect(report).to.have.property(\"reporter_id\");",
+                  "            pm.expect(report).to.have.property(\"transaction_id\");",
+                  "            pm.expect(report).to.have.property(\"reported_user_id\");",
+                  "            pm.expect(report).to.have.property(\"reason\");",
+                  "            pm.expect(report).to.have.property(\"status\");",
+                  "            pm.expect(report).to.have.property(\"created_at\");",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Kiểm tra transaction_id đúng ---",
+                  "    pm.test(\"All reports belong to requested transaction\", function () {",
+                  "        const expectedTransactionId = parseInt(pm.variables.get(\"transaction_id\"));",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report.transaction_id).to.eql(expectedTransactionId);",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Kiểm tra status hợp lệ ---",
+                  "    const allowedStatuses = ['pending', 'resolved', 'dismissed'];",
+                  "",
+                  "    pm.test(\"Status is valid\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(allowedStatuses).to.include(report.status);",
+                  "        });",
+                  "    });",
+                  "",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -3227,8 +3371,15 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}report/api/reports/transaction/{{transaction_id}}",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "transaction", "{{transaction_id}}"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "transaction",
+                "{{transaction_id}}"
+              ]
             }
           },
           "response": []
@@ -3240,9 +3391,58 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Get reports about user\", function () {",
+                  "pm.test(\"Status code is 200\", function () {",
                   "    pm.response.to.have.status(200);",
-                  "});"
+                  "});",
+                  "",
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "// --- Kiểm tra kiểu dữ liệu ---",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// --- Nếu có dữ liệu thì validate ---",
+                  "if (jsonData.length > 0) {",
+                  "",
+                  "    pm.test(\"Each report has required fields\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report).to.have.property(\"report_id\");",
+                  "            pm.expect(report).to.have.property(\"reporter_id\");",
+                  "            pm.expect(report).to.have.property(\"transaction_id\");",
+                  "            pm.expect(report).to.have.property(\"reported_user_id\");",
+                  "            pm.expect(report).to.have.property(\"reason\");",
+                  "            pm.expect(report).to.have.property(\"status\");",
+                  "            pm.expect(report).to.have.property(\"created_at\");",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Kiểm tra đúng user bị report ---",
+                  "    pm.test(\"All reports belong to reported_user_id\", function () {",
+                  "        const expectedUserId = parseInt(pm.variables.get(\"reported_user_id\"));",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report.reported_user_id).to.eql(expectedUserId);",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Kiểm tra status hợp lệ ---",
+                  "    const allowedStatuses = ['pending', 'resolved', 'dismissed'];",
+                  "",
+                  "    pm.test(\"Status is valid\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(allowedStatuses).to.include(report.status);",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Kiểm tra reason hợp lệ ---",
+                  "    const allowedReasons = ['fraud', 'misleading', 'communication', 'item_issue', 'other'];",
+                  "",
+                  "    pm.test(\"Reason is valid\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(allowedReasons).to.include(report.reason);",
+                  "        });",
+                  "    });",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -3255,7 +3455,9 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}report/api/reports/reported-user/{{reported_user_id}}",
-              "host": ["{{url_base}}report"],
+              "host": [
+                "{{url_base}}report"
+              ],
               "path": [
                 "api",
                 "reports",
@@ -3273,9 +3475,58 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test(\"Get my reports success\", function () {",
+                  "pm.test(\"Status code is 200\", function () {",
                   "    pm.response.to.have.status(200);",
-                  "});"
+                  "});",
+                  "",
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "// --- Kiểm tra kiểu dữ liệu ---",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    pm.expect(jsonData).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "// --- Nếu có dữ liệu thì validate ---",
+                  "if (jsonData.length > 0) {",
+                  "",
+                  "    pm.test(\"Each report has required fields\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report).to.have.property(\"report_id\");",
+                  "            pm.expect(report).to.have.property(\"reporter_id\");",
+                  "            pm.expect(report).to.have.property(\"transaction_id\");",
+                  "            pm.expect(report).to.have.property(\"reported_user_id\");",
+                  "            pm.expect(report).to.have.property(\"reason\");",
+                  "            pm.expect(report).to.have.property(\"status\");",
+                  "            pm.expect(report).to.have.property(\"created_at\");",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Quan trọng nhất: đúng user ---",
+                  "    pm.test(\"All reports belong to current user\", function () {",
+                  "        const currentUserId = parseInt(pm.environment.get(\"user_id\"));",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(report.reporter_id).to.eql(currentUserId);",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Validate status ---",
+                  "    const allowedStatuses = ['pending', 'resolved', 'dismissed'];",
+                  "",
+                  "    pm.test(\"Status is valid\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(allowedStatuses).to.include(report.status);",
+                  "        });",
+                  "    });",
+                  "",
+                  "    // --- Validate reason ---",
+                  "    const allowedReasons = ['fraud', 'misleading', 'communication', 'item_issue', 'other'];",
+                  "",
+                  "    pm.test(\"Reason is valid\", function () {",
+                  "        jsonData.forEach(report => {",
+                  "            pm.expect(allowedReasons).to.include(report.reason);",
+                  "        });",
+                  "    });",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -3298,8 +3549,14 @@
             "header": [],
             "url": {
               "raw": "{{url_base}}report/api/reports/my-reports",
-              "host": ["{{url_base}}report"],
-              "path": ["api", "reports", "my-reports"]
+              "host": [
+                "{{url_base}}report"
+              ],
+              "path": [
+                "api",
+                "reports",
+                "my-reports"
+              ]
             }
           },
           "response": []
