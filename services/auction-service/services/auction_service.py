@@ -63,8 +63,8 @@ class AuctionService:
                    return None, "Pin này đã có trong một phiên đấu giá khác."
             else:
                  return None, "Loại đấu giá không hợp lệ." 
-            if float(data['current_bid']) >= 100000000 or float(data['current_bid'])<=0:
-                return None, "Giá bắt đầu đấu giá phải trong khoảng 0 đến 100 triệu"
+            if float(data['current_bid']) > 1000000 or float(data['current_bid'])<=0:
+                return None, "Giá bắt đầu đấu giá phải trong khoảng 0 đến 1 triệu"
             start_time_input = data['start_time']
             if isinstance(start_time_input, str):
                 try: 
@@ -150,8 +150,8 @@ class AuctionService:
             if 'current_bid' in data:
                  try:
                      new_bid = float(data['current_bid'])
-                     if new_bid <= 0 or new_bid >= 100000000:
-                         return None, "Giá khởi điểm phải lớn hơn 0 và nhỏ hơn 100000000."
+                     if new_bid <= 0 or new_bid > 1000000:
+                         return None, "Giá khởi điểm phải lớn hơn 0 và nhỏ hơn 1 triệu."
                      auction.current_bid = new_bid
                      updated = True
                  except (ValueError, TypeError):

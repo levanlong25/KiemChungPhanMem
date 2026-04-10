@@ -346,9 +346,9 @@ def place_bid(auction_id):
         return jsonify({"error": "'bid_amount' must be a valid number"}), 400
 
     # Validate khoảng giá
-    if bid_amount <= 0 or bid_amount >= 100000000:
+    if bid_amount <= 0 or bid_amount > 1000000:
         return jsonify({
-            "error": "Giá đặt phải lớn hơn 0 và nhỏ hơn 100 triệu"
+            "error": "Giá đặt phải lớn hơn 0 và nhỏ hơn 1 triệu"
         }), 400
 
     # Gọi service xử lý

@@ -9,19 +9,9 @@ class ReviewService:
     @staticmethod
     def create_review(transaction_id, reviewer_id, reviewed_user_id, rating, comment=None):
         """Tạo đánh giá mới, kiểm tra trùng lặp."""
+        if reviewer_id == reviewed_user_id:
+            return None, "Bạn không thể tự đánh giá chính mình."
         try:
-            # --- KIỂM TRA ĐIỀU KIỆN (TÙY CHỌN NHƯNG NÊN CÓ) ---
-            # 1. Kiểm tra xem người đánh giá có phải là người mua/bán của giao dịch không?
-            #    (Cần gọi Transaction Service để lấy thông tin transaction)
-            #    Ví dụ: transaction_info = call_transaction_service(transaction_id)
-            #           if not transaction_info or reviewer_id not in [transaction_info['buyer_id'], transaction_info['seller_id']]:
-            #               return None, "Bạn không tham gia giao dịch này."
-            #           if reviewed_user_id not in [transaction_info['buyer_id'], transaction_info['seller_id']]:
-            #                return None, "Người được đánh giá không tham gia giao dịch này."
-            #           if transaction_info['transaction_status'] != 'completed': # Hoặc 'paid' tùy logic
-            #                return None, "Giao dịch chưa hoàn thành để đánh giá."
-
-            # 2. Kiểm tra xem đã đánh giá người này cho giao dịch này chưa?
             existing_review = Review.query.filter_by(
                 transaction_id=transaction_id,
                 reviewer_id=reviewer_id,
@@ -29,17 +19,14 @@ class ReviewService:
             ).first()
             if existing_review:
                 return None, "Bạn đã đánh giá người dùng này cho giao dịch này rồi."
-            # --- KẾT THÚC KIỂM TRA ---
-
-
-            # Chuyển đổi rating sang int (nếu cần) và kiểm tra
             try:
                 rating_int = int(rating)
-                if not (0 <= rating_int <= 5): # Mặc dù model có validate, check sớm hơn
+                if not (0 <= rating_int <= 5):  
                      raise ValueError("Rating phải từ 0 đến 5.")
             except (ValueError, TypeError):
                  return None, "Rating phải là một số nguyên từ 0 đến 5."
-
+            if comment and len(comment) > 500:
+                return None, "Comment quá dài (tối đa 500 ký tự)."
             review = Review(
                 transaction_id=transaction_id,
                 reviewer_id=reviewer_id,
@@ -78,7 +65,10 @@ class ReviewService:
     @staticmethod
     def delete_review(review_id, user_id):
         """Xóa đánh giá, kiểm tra quyền sở hữu."""
-        review = Review.query.get(review_id)
+        review = Review.query.filter_by(
+            review_id=review_id,
+            reviewer_id=user_id
+        ).first()
         if not review:
             return False, "Không tìm thấy đánh giá."
 
@@ -102,10 +92,12 @@ class ReviewService:
         if not review:
             return None, "Không tìm thấy đánh giá."
 
-        # KIỂM TRA QUYỀN: Chỉ người tạo mới được sửa
         if review.reviewer_id != user_id:
             return None, "Bạn không có quyền sửa đánh giá này."
-
+        
+        if comment and len(comment) > 500:
+            return None, "Comment quá dài (tối đa 500 ký tự)."
+        
         updated = False
         try:
             if rating is not None:

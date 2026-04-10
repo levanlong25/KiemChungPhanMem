@@ -35,8 +35,8 @@ def create_report_api():
     data = request.get_json()
     if not data: return jsonify(error="Thiếu JSON body"), 400
 
-    transaction_id = data.get('transaction_id')
-    reported_user_id = data.get('reported_user_id')
+    transaction_id = int(data.get('transaction_id'))
+    reported_user_id = int(data.get('reported_user_id'))
     reason = data.get('reason')
     details = data.get('details')
 

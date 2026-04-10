@@ -41,7 +41,8 @@ class TransactionService:
             seller_id = int(seller_id)
             buyer_id = int(buyer_id)
             final_price = float(final_price)
-             
+            if not (1 <= final_price <= 1_000_000):
+                return None, None, "Giá phải từ 1 đến 1,000,000."
             if listing_id is not None:
                 listing_id = int(listing_id)
             if auction_id is not None:

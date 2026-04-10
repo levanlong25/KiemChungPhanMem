@@ -312,7 +312,8 @@ def create_payment_route(transaction_id):
     data = request.get_json()
     if not data or not all(k in data for k in ('payment_method', 'amount')):
         return jsonify({"error": "Missing payment_method or amount"}), 400
-
+    if not (1 <= float(data['amount']) <= 1_000_000):
+        return jsonify({"error": "Số tiền không hợp lệ (1 - 1,000,000)"}), 400
     current_user_id = int(get_jwt_identity())
     transaction = TransactionService.get_transaction_by_id(transaction_id)
     if not transaction:
@@ -363,7 +364,7 @@ def create_payment_route(transaction_id):
             db.session.add(new_fee) 
         else:
             fee_amount = existing_fee.amount
-
+        
         original_amount = Decimal(str(data['amount']))
         final_amount = float(original_amount + Decimal(str(fee_amount)))
         
