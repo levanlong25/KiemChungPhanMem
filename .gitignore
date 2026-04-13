@@ -2,3 +2,7 @@
 **/migrations/
 __pycache__/
 celerybeat-schedule
+
+node_modules/
+output/
+.env
