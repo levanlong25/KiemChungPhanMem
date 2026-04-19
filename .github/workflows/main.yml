@@ -1,15 +1,21 @@
-name: EV Platform CI/CD
-
 on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'release-*'
   pull_request:
-    branches: [ "main", "develop", "release-1" ]
+    branches:
+      - main
+      - develop
+      - 'release-*'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Create .env file for Docker
       run: |
@@ -27,24 +33,21 @@ jobs:
     - name: Start Microservices
       run: docker compose up -d --build
 
-    - name: Initialize All Microservices Databases
+    - name: Init DB
       run: |
-        echo "Waiting for all databases to be ready..."
-        sleep 20
-        # Danh sách các service cần tạo bảng
         services=("user_service" "listing_service" "auction_service" "transaction_service" "review_service" "report_service")
-        
         for s in "${services[@]}"; do
-          echo "Initializing $s..."
-          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || echo "$s already initialized or failed"
+          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || true
         done
-    - name: Wait for API Gateway Ready
+
+    - name: Wait for API Gateway
       run: |
-        timeout 60s bash -c 'until curl -s http://localhost/user/api/login > /dev/null; do sleep 5; done'
+        timeout 60s bash -c 'until curl -f http://localhost/health; do sleep 5; done'
 
     - name: Run Postman Tests
       run: |
         npm install -g newman
         newman run "automation-tests/postman/EV_Platform_Automation.postman_collection.json" \
-                   -e "automation-tests/postman/EV_Testing.postman_environment.json" \
-                   --env-var "url_base=http://localhost/"
+          -e "automation-tests/postman/EV_Testing.postman_environment.json" \
+          --env-var "url_base=http://localhost/" \
+          --bail
