@@ -1,21 +1,23 @@
+name: EV Platform CI/CD
+
 on:
   push:
     branches:
       - main
       - develop
-      - 'release-*'
+      - release-5
   pull_request:
     branches:
       - main
       - develop
-      - 'release-*'
+      - release-5
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
     - name: Create .env file for Docker
       run: |
@@ -33,21 +35,24 @@ jobs:
     - name: Start Microservices
       run: docker compose up -d --build
 
-    - name: Init DB
+    - name: Initialize All Microservices Databases
       run: |
+        echo "Waiting for all databases to be ready..."
+        sleep 20
+        # Danh sách các service cần tạo bảng
         services=("user_service" "listing_service" "auction_service" "transaction_service" "review_service" "report_service")
+        
         for s in "${services[@]}"; do
-          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || true
+          echo "Initializing $s..."
+          docker exec $s python3 -c "from app import create_app, db; app=create_app(); app.app_context().push(); db.create_all()" || echo "$s already initialized or failed"
         done
-
-    - name: Wait for API Gateway
+    - name: Wait for API Gateway Ready
       run: |
-        timeout 60s bash -c 'until curl -f http://localhost/health; do sleep 5; done'
+        timeout 60s bash -c 'until curl -s http://localhost/user/api/login > /dev/null; do sleep 5; done'
 
     - name: Run Postman Tests
       run: |
         npm install -g newman
         newman run "automation-tests/postman/EV_Platform_Automation.postman_collection.json" \
-          -e "automation-tests/postman/EV_Testing.postman_environment.json" \
-          --env-var "url_base=http://localhost/" \
-          --bail
+                   -e "automation-tests/postman/EV_Testing.postman_environment.json" \
+                   --env-var "url_base=http://localhost/"
